@@ -1,16 +1,19 @@
 #ifndef __MovingAverage_H__
 #define __MovingAverage_H__
 
-#include "IFXActor.h"
+#include "IFXIndicator.h"
 
 
-class MovingAverage : public IFXActor
+class MovingAverage : public IFXIndicator
 {
 public:
     MovingAverage(int _period);
+    ~MovingAverage();
 
     virtual void Init();
     virtual void OnNewBar(double sample);
+
+    virtual double GetValue();
 
 private:
     int period;

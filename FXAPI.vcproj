@@ -201,11 +201,23 @@
 				Name="Indicators"
 				>
 				<File
+					RelativePath=".\IFXIndicator.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MovingAverage.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\MovingAverage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\OutputIndicatorDecorator.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\OutputIndicatorDecorator.h"
 					>
 				</File>
 			</Filter>

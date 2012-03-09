@@ -6,11 +6,11 @@
 #include "IFXActor.h"
 #include "Simulator.h"
 #include "MovingAverage.h"
+#include "OutputIndicatorDecorator.h"
 
 DataManager dataManager;
 std::vector<IFXActor *> loadedActors;
 
-void SetupActors();
 bool GetCommand();
 void LoadData(std::string filename);
 void Run(std::string args);
@@ -18,25 +18,20 @@ void Run(std::string args);
 
 int main()
 {
-    SetupActors();
-
-    bool stop;
+    /*bool stop;
 
     do 
     {
         stop = GetCommand();
     } 
-    while(!stop);
+    while(!stop);*/
 
+    // for debugging, hardcode this
+    loadedActors.push_back(new OutputIndicatorDecorator(new MovingAverage(3), "MA_test.txt"));
+    LoadData("test.data");
+    Run("");
+ 
     return 0;
-}
-
-void SetupActors()
-{
-    // a change in any actor will require recompilation; in the future
-    // it might be desirable to make this more dynamic to allow easier scripting
-
-    loadedActors.push_back(new MovingAverage(12));
 }
 
 bool GetCommand()

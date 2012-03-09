@@ -19,7 +19,7 @@ void DataManager::AddData(std::string filename)
 
 std::string DataManager::GetData(int index)
 {
-    assert(index > 0 && index <= (int)dataFiles.size());
+    assert(index >= 0 && index <= (int)dataFiles.size());
     return dataFiles[index];
 }
 

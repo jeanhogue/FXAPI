@@ -15,14 +15,15 @@ Simulator::~Simulator()
 
 void Simulator::Run()
 {
-    bool hasData = true;
+    for (unsigned int i = 0; i < actors.size(); ++ i)
+        actors[i]->Init();
+    
     double sample;
-
     do 
     {
         in >> sample;
         for (unsigned int i = 0; i < actors.size(); ++ i)
             actors[i]->OnNewBar(sample);
     }
-    while(hasData);
+    while(!in.eof());
 }
