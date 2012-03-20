@@ -1,6 +1,5 @@
 #include "CSVReader.h"
 #include <cassert>
-#include <cmath>
 
 
 CSVReader::CSVReader(std::string _filename, Timeframe timeFrame)
@@ -51,42 +50,6 @@ bool CSVReader::IsValidReader()
 bool CSVReader::EndOfData()
 {
     return in.eof();
-}
-
-double CSVReader::GetSampleNBarsAgo(int n)
-{
-    int len = (int)data.size();
-    if (n >= len)
-        return 0;
-    return data[len - 1 - n];
-}
-
-double CSVReader::GetMinValueInRange(int start, int end)
-{
-    int count = 0;
-    double min = HUGE_VAL;
-
-    for (int i = (int)data.size() - 1 - start; count < end - start && i >= 0; -- i, ++ count)
-    {
-        if (data[i] < min)
-            min = data[i];
-    }
-
-    return min;
-}
-
-double CSVReader::GetMaxValueInRange(int start, int end)
-{
-    int count = 0;
-    double max = -HUGE_VAL;
-
-    for (int i = (int)data.size() - 1 - start; count < end - start && i >= 0; -- i, ++ count)
-    {
-        if (data[i] > max)
-            max = data[i];
-    }
-
-    return max;
 }
 
 std::string CSVReader::GetStr()

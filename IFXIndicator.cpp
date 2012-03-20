@@ -4,7 +4,7 @@
 
 double IFXIndicator::GetSampleNBarsAgo(int n)
 {
-    if (n > (int)values.size())
+    if (n >= (int)values.size())
         return 0;
     return values[values.size() - 1 - n];
 }

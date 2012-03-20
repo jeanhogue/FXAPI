@@ -79,7 +79,7 @@ void Renderer::RenderScales()
 
 double GetStep(double minValue, double maxValue)
 {
-    if (abs(maxValue - minValue) < 1e-10)
+    /*if (abs(maxValue - minValue) < 1e-10)
         return 1;
 
     // slide until we get only one significant digit
@@ -149,7 +149,8 @@ double GetStep(double minValue, double maxValue)
         }
 
         return R * pow(10.f, -slides);
-    }
+    }*/
+    return 1;
 }
 
 void Renderer::RenderScalesX()
@@ -160,7 +161,7 @@ void Renderer::RenderScalesX()
 void Renderer::RenderScalesY()
 {
     // check to avoid infinite loop
-    if (maxValue - minValue > 1e30)
+    /*if (maxValue - minValue > 1e30)
         return;
 
     static const int gridMinPixelCount = 40;
@@ -229,7 +230,7 @@ void Renderer::RenderScalesY()
         ss << i;
 
         RenderText(*dc, PixelsToWorldX(borderW * 4 / 5, false), CheckFlipY(y), wxString(ss.str().c_str(), wxConvUTF8), eFtSmall, eCentered, 90.0);
-    }
+    }*/
 }
 
 void Renderer::RenderData()

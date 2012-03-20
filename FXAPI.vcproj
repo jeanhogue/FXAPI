@@ -278,7 +278,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataReader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DataReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RandomDataGenerator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RandomDataGenerator.h"
 				>
 			</File>
 		</Filter>

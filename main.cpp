@@ -6,6 +6,7 @@
 #include "CapitalManager.h"
 #include "DataReader.h"
 #include "CSVReader.h"
+#include "RandomDataGenerator.h"
 #include "IFXActor.h"
 #include "Simulator.h"
 #include "MovingAverage.h"
@@ -29,7 +30,8 @@ int main(int argc, char **argv)
 {
     atexit(Cleanup);
 
-    dataManager.AddData(new CSVReader("Data/Q1_3600_1000.csv", t1H));
+    //dataManager.AddData(new CSVReader("Data/Q1_3600_1000.csv", t1H));
+    dataManager.AddData(new RandomDataGenerator(1.20, 100));
 
     //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
     loadedActors.push_back(new MATrader(&capitalManager));
