@@ -23,6 +23,8 @@ private:
     float PixelsToWorldY(float y);
 
     void RenderScales();
+    void RenderScalesX();
+    void RenderScalesY();
     void RenderData();
     void RenderActors();
     void RenderTrader(TradingBot *trader);
