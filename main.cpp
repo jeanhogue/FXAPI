@@ -3,34 +3,48 @@
 #include <sstream>
 #include <vector>
 #include "DataManager.h"
+#include "CapitalManager.h"
+#include "DataReader.h"
+#include "CSVReader.h"
 #include "IFXActor.h"
 #include "Simulator.h"
 #include "MovingAverage.h"
 #include "OutputIndicatorDecorator.h"
+#include "MATrader.h"
+#include "Renderer.h"
 
 DataManager dataManager;
+CapitalManager capitalManager;
 std::vector<IFXActor *> loadedActors;
 
 bool GetCommand();
-void LoadData(std::string filename);
+void LoadData(DataReader *dataReader);
 void Run(std::string args);
+void Cleanup();
+
+bool USE_RENDERER = true;
 
 
-int main()
+int main(int argc, char **argv)
 {
-    /*bool stop;
+    atexit(Cleanup);
 
-    do 
+    dataManager.AddData(new CSVReader("Data/Q1_3600_1000.csv", t1H));
+
+    //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
+    loadedActors.push_back(new MATrader(&capitalManager));
+    
+    Simulator simulator(dataManager.GetData(0), loadedActors, &capitalManager);
+
+    simulator.Init();
+    simulator.Run();
+
+    if (USE_RENDERER)
     {
-        stop = GetCommand();
-    } 
-    while(!stop);*/
+        Renderer renderer(&simulator);
+        StartRendering(argc, argv, &renderer);
+    }
 
-    // for debugging, hardcode this
-    loadedActors.push_back(new OutputIndicatorDecorator(new MovingAverage(3), "MA_test.txt"));
-    LoadData("test.data");
-    Run("");
- 
     return 0;
 }
 
@@ -55,7 +69,7 @@ bool GetCommand()
         args = fullCommand.substr(pos);
     }
 
-    if (command == "load")
+    /*if (command == "load")
     {
         LoadData(args);
     }
@@ -66,14 +80,14 @@ bool GetCommand()
     else
     {
         std::cout << "Unknown command: " << fullCommand << std::endl;
-    }
+    }*/
 
     return false;
 }
 
-void LoadData(std::string filename)
+void LoadData(DataReader *dataReader)
 {
-    dataManager.AddData(filename);
+    dataManager.AddData(dataReader);
 }
 
 void Run(std::string args)
@@ -94,6 +108,13 @@ void Run(std::string args)
         }
     }
 
-    Simulator simulator(dataManager.GetData(fileIndex), loadedActors);
-    simulator.Run();
+    /*Simulator simulator(dataManager.GetData(fileIndex), loadedActors, &capitalManager);
+    simulator.Run();*/
+}
+
+void Cleanup()
+{
+    for (unsigned int i = 0; i < loadedActors.size(); ++ i)
+        delete loadedActors[i];
+    loadedActors.clear();
 }

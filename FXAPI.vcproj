@@ -162,19 +162,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CapitalManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CapitalManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\DataManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DataManager.h"
+				RelativePath=".\Defs.h"
 				>
 			</File>
 			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Order.cpp"
 				>
 			</File>
 			<File
@@ -201,10 +205,6 @@
 				Name="Indicators"
 				>
 				<File
-					RelativePath=".\IFXIndicator.h"
-					>
-				</File>
-				<File
 					RelativePath=".\MovingAverage.cpp"
 					>
 				</File>
@@ -212,23 +212,99 @@
 					RelativePath=".\MovingAverage.h"
 					>
 				</File>
-				<File
-					RelativePath=".\OutputIndicatorDecorator.cpp"
+				<Filter
+					Name="Utility"
 					>
-				</File>
-				<File
-					RelativePath=".\OutputIndicatorDecorator.h"
-					>
-				</File>
+					<File
+						RelativePath=".\IFXIndicator.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\IFXIndicator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\OutputIndicatorDecorator.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\OutputIndicatorDecorator.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Traders"
 				>
 				<File
-					RelativePath=".\TradingBot.h"
+					RelativePath=".\MATrader.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\MATrader.h"
+					>
+				</File>
+				<Filter
+					Name="Utility"
+					>
+					<File
+						RelativePath=".\TradingBot.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\TradingBot.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Data"
+			>
+			<File
+				RelativePath=".\CSVReader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CSVReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DataManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataReader.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Graphics"
+			>
+			<File
+				RelativePath=".\glutBoilerplate.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingUtils.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingUtils.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

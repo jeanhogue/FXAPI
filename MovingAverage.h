@@ -13,13 +13,43 @@ public:
     virtual void Init();
     virtual void OnNewBar(double sample);
 
-    virtual double GetValue();
-
-private:
+protected:
     int period;
     double *buffer;
     int bufferIndex;
 };
 
+
+class SMA : public MovingAverage
+{
+public:
+    SMA(int period);
+
+    virtual double GetValue();
+};
+
+
+class EMA : public MovingAverage
+{
+public:
+    EMA(int period);
+
+    virtual double GetValue();
+
+private:
+    double a;               // a constant in the EMA formula
+    double oneMinusA;       // (1 - a)
+    double lastValue;
+};
+
+
+enum MAType
+{
+    tSMA,
+    tEMA,
+};
+
+// factory method to create MAs
+MovingAverage *CreateMA(MAType type, int period);
 
 #endif

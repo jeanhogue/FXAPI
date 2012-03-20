@@ -1,29 +1,46 @@
-#include "Simulator.h"
 #include <cassert>
+#include "Simulator.h"
+#include "CapitalManager.h"
 
 
-Simulator::Simulator(std::string filename, std::vector<IFXActor *> _actors)
-: in(filename.c_str()), actors(_actors)
+Simulator::Simulator(DataReader *_reader, std::vector<IFXActor *> _actors, CapitalManager *_capitalManager)
+: reader(_reader), actors(_actors), capitalManager(_capitalManager), currentIndex(0)
 {
-    assert(in.is_open());
 }
 
-Simulator::~Simulator()
-{
-    in.close();
-}
-
-void Simulator::Run()
+void Simulator::Init()
 {
     for (unsigned int i = 0; i < actors.size(); ++ i)
         actors[i]->Init();
-    
-    double sample;
+}
+
+void Simulator::Run()
+{    
     do 
     {
-        in >> sample;
-        for (unsigned int i = 0; i < actors.size(); ++ i)
-            actors[i]->OnNewBar(sample);
+        RunOneBar();
     }
-    while(!in.eof());
+    while (!reader->EndOfData());
+}
+
+void Simulator::RunOneBar()
+{
+    currentSample = reader->GetNextTick();
+    for (unsigned int i = 0; i < actors.size(); ++ i)
+        actors[i]->OnNewBar(currentSample);
+
+    capitalManager->OnNewBar(currentSample);
+}
+
+void Simulator::GoForwardNBars(int nBars)
+{
+    if (currentIndex > nBars)
+        currentIndex -= nBars;
+    else
+        currentIndex = 0;
+}
+
+void Simulator::GoBackNBars(int nBars)
+{
+    currentIndex += nBars;
 }

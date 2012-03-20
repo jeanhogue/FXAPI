@@ -15,6 +15,11 @@ public:
     virtual bool IsValidReader() = 0;
     virtual bool EndOfData() = 0;
 
+    virtual double GetSampleNBarsAgo(int n) = 0;
+
+    virtual double GetMinValueInRange(int start, int end) = 0;
+    virtual double GetMaxValueInRange(int start, int end) = 0;
+
     virtual std::string GetStr() = 0;
 
 protected:

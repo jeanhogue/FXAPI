@@ -7,6 +7,14 @@ Order::Order(double _volume, double price, double _takeProfits, double _stopLoss
 {
 }
 
+/*
+volume 1 = 100,000$
+
+leverage 1:100 => to buy volume 1 (1 lot), need 1000$
+
+1.2345 -> 1.2348 (3 pips) = 0.0003 * 100,000 * 1 = 30$
+*/
+
 double Order::GetProfits()
 {
     return (closePrice - openPrice) * volume * 100000;

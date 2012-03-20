@@ -12,4 +12,6 @@ void DrawTriangle(float x1, float y1, float x2, float y2, float x3, float y3);
 void DrawCircle(float x, float y, float radiusX, float radiusY, int step = 30);
 void DrawCircleBorder(float x, float y, float radiusX, float radiusY, int step = 30);
 
+void Print(std::string str, float x, float y);
+
 #endif

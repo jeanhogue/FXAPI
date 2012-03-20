@@ -1,10 +1,13 @@
 #include <iostream>
-#include "Renderer.h"
 #include "glut.h"
+#include "Renderer.h"
+#include "RenderingUtils.h"
 
 int win;
 int width;
 int height;
+float borderX = 30;
+float borderY = 20;
 Renderer *renderer;
 
 void disp();
@@ -44,6 +47,14 @@ void disp()
     glMatrixMode(GL_MODELVIEW);
     glViewport(0, 0, width, height);
 
+    float normBorderX = borderX / width;
+    float normBorderY = borderY / height;
+
+    glColor3f(1, 1, 1);
+    DrawRectangleBorder(normBorderX, normBorderY, 1 - normBorderX, 1 - normBorderY);
+
+    glViewport(width * normBorderX, height * normBorderY, width - 2 * (width * normBorderX), height - 2 * (height * normBorderY));
+
     renderer->Render();
 
     glFlush();
@@ -57,11 +68,12 @@ void keyb(unsigned char key, int x, int y)
         exit(0);
     }
     else
-        renderer->Keypressed(key);
+        renderer->KeyPressed(key);
 }
 
 void reshape(int w, int h)
 {
     width = w;
     height = h;
+    renderer->SetDimensions(width, height);
 }

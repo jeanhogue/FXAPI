@@ -1,29 +1,24 @@
-#include <fstream>
 #include <iostream>
 #include <cassert>
 #include "DataManager.h"
+#include "DataReader.h"
 
 
-void DataManager::AddData(std::string filename)
+void DataManager::AddData(DataReader *dataReader)
 {
-    // make sure the file exists
-    std::ifstream in(filename.c_str());
-    bool valid = in.is_open();
-    in.close();
-
-    if (!valid)
-        std::cout << "Filename " << filename << " is not valid; skipping" << std::endl;
+    if (!dataReader->IsValidReader())
+        std::cout << "Data Reader " << dataReader->GetStr() << " is not valid; skipping" << std::endl;
     else
-        dataFiles.push_back(filename);
+        dataReaders.push_back(dataReader);
 }
 
-std::string DataManager::GetData(int index)
+DataReader *DataManager::GetData(int index)
 {
-    assert(index >= 0 && index <= (int)dataFiles.size());
-    return dataFiles[index];
+    assert(index >= 0 && index <= (int)dataReaders.size());
+    return dataReaders[index];
 }
 
 int DataManager::GetCount() 
 { 
-    return (int)dataFiles.size(); 
+    return (int)dataReaders.size(); 
 }

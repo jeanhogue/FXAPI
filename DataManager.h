@@ -5,15 +5,17 @@
 #include <vector>
 
 
+class DataReader;
+
 class DataManager
 {
 public:
-    void AddData(std::string filename);
-    std::string GetData(int index);
+    void AddData(DataReader *dataReader);
+    DataReader *GetData(int index);
     int GetCount();
 
 private:
-    std::vector<std::string> dataFiles;
+    std::vector<DataReader *> dataReaders;
 };
 
 

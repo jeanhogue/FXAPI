@@ -2,11 +2,22 @@
 #include "MovingAverage.h"
 
 
+MATrader::MATrader(CapitalManager *capitalManager)
+: TradingBot(capitalManager)
+{
+}
+
 void MATrader::Init()
 {
     slowMA = CreateMA(tEMA, 8);
     fastMA = CreateMA(tEMA, 5);
  
+    slowMA->Init();
+    fastMA->Init();
+
+    indicators.push_back(slowMA);
+    indicators.push_back(fastMA);
+
     state = 0;
     barCount = 0;
 }

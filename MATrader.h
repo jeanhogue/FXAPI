@@ -9,6 +9,8 @@ class MovingAverage;
 class MATrader : public TradingBot
 {
 public:
+    MATrader(CapitalManager *capitalManager);
+
     virtual void Init();
     virtual void OnNewBar(double sample);
 

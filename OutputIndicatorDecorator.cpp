@@ -15,5 +15,5 @@ OutputIndicatorDecorator::~OutputIndicatorDecorator()
 void OutputIndicatorDecorator::OnNewBar(double sample)
 {
     decoree->OnNewBar(sample);
-    out << decoree->GetValue() << std::endl;
+    out << sample << " " << decoree->GetValue() << std::endl;
 }
