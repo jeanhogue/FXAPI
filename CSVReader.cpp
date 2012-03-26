@@ -37,7 +37,7 @@ double CSVReader::GetNextTick()
     double sample = atof(buffer + begin);
     buffer[end] = ';';
 
-    data.push_back(sample);
+    PushDataSample(sample);
 
     return sample;
 }

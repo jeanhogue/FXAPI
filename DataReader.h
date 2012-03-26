@@ -16,15 +16,19 @@ public:
     virtual bool IsValidReader() = 0;
     virtual bool EndOfData() = 0;
 
-    virtual double GetSampleNBarsAgo(int n);
+    virtual double GetSampleAtIndex(int n);
 
     virtual double GetMinValueInRange(int start, int end);
     virtual double GetMaxValueInRange(int start, int end);
 
+    virtual int GetTimeIndex() { return timeIndex; }
     virtual std::string GetStr() = 0;
+
+    void PushDataSample(double sample);
 
 protected:
     Timeframe timeFrame;
+    int timeIndex;
     std::vector<double> data;
 };
 

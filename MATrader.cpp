@@ -22,10 +22,10 @@ void MATrader::Init()
     barCount = 0;
 }
 
-void MATrader::OnNewBar(double sample)
+void MATrader::OnNewBar(double sample, int timeIndex)
 {
-    slowMA->OnNewBar(sample);
-    fastMA->OnNewBar(sample);
+    slowMA->OnNewBar(sample, timeIndex);
+    fastMA->OnNewBar(sample, timeIndex);
     barCount ++;
 
     int newState = GetState();
@@ -36,9 +36,9 @@ void MATrader::OnNewBar(double sample)
         {
             // a crossover happened; generate a signal
             if (newState == 1)
-                Buy(sample);
+                Buy(sample, timeIndex);
             else
-                Sell(sample);
+                Sell(sample, timeIndex);
         }
     }
     

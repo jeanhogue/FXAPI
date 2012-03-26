@@ -13,7 +13,7 @@
 
 
 Renderer::Renderer(Simulator *_simulator, ObjectManager *_objectManager)
-: simulator(_simulator), objectManager(_objectManager), offsetFromLatestBar(0), numBarsToDraw(30)
+: simulator(_simulator), objectManager(_objectManager), numBarsToDraw(30)
 {
     reader = simulator->GetDataReader();
     CalculateMinMaxValues();
@@ -108,17 +108,20 @@ void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 
 void Renderer::RenderData()
 {
-    float POINT_WIDTH = PixelsToWorldX(5);
+    float SPACE_BETWEEN_BARS = PixelsToWorldX(5);
+    float POINT_WIDTH = PixelsToWorldX((float)width / numBarsToDraw) - SPACE_BETWEEN_BARS;
     float POINT_HEIGHT = PixelsToWorldY(5);
+
+    int index = simulator->GetCurrentIndex();
 
     glColor3f(0, 1, 0);
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
-        double sample = reader->GetSampleNBarsAgo(i + simulator->GetCurrentIndex());
+        double sample = reader->GetSampleAtIndex(index - i);
         float x = 1 - i / (float)numBarsToDraw;
         float y = (sample - minValue) / (maxValue - minValue);
         
-        DrawRectangle(x - POINT_WIDTH, y - POINT_HEIGHT, x + POINT_WIDTH, y + POINT_HEIGHT);
+        DrawRectangle(x - POINT_WIDTH / 2, y - POINT_HEIGHT, x + POINT_WIDTH / 2, y + POINT_HEIGHT);
     }
 }
 
@@ -146,16 +149,15 @@ void Renderer::RenderTrader(TradingBot *trader)
 
 void Renderer::RenderActor(IFXIndicator *actor)
 {
-    float POINT_WIDTH = PixelsToWorldX(5);
-    float POINT_HEIGHT = PixelsToWorldY(5);
-
     float lastPointX = -1; 
     float lastPointY = -1;
+
+    int index = simulator->GetCurrentIndex();
 
     glColor3f(1, 0, 0);
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
-        double sample = actor->GetSampleNBarsAgo(i + simulator->GetCurrentIndex());
+        double sample = actor->GetSampleAtIndex(index - i);
         float x = 1 - i / (float)numBarsToDraw;
         float y = (sample - minValue) / (maxValue - minValue);
 
@@ -178,23 +180,28 @@ void Renderer::RenderObjects()
 {
     std::vector<Object *> objects = objectManager->GetObjects();
 
+    int index = simulator->GetCurrentIndex();
+
     for (unsigned int i = 0; i < objects.size(); ++ i)
-        objects[i]->Render();
+    {
+        if (objects[i]->IsInScreen(index, numBarsToDraw))
+            objects[i]->Render(index, numBarsToDraw, minValue, maxValue);
+    }
 }
 
 void Renderer::CalculateMinMaxValues()
 {
     int index = simulator->GetCurrentIndex();
-    minValue = reader->GetMinValueInRange(index, index + numBarsToDraw);
-    maxValue = reader->GetMaxValueInRange(index, index + numBarsToDraw);
+    minValue = reader->GetMinValueInRange(index - numBarsToDraw, index);
+    maxValue = reader->GetMaxValueInRange(index - numBarsToDraw, index);
 
     std::vector<IFXActor *> actors = simulator->GetActors();
     for (unsigned int i = 0; i < actors.size(); ++ i)
     {
         if (actors[i]->IsIndicator())
         {
-            double thisMin = actors[i]->GetMinValueInRange(index, index + numBarsToDraw);
-            double thisMax = actors[i]->GetMaxValueInRange(index, index + numBarsToDraw);
+            double thisMin = actors[i]->GetMinValueInRange(index - numBarsToDraw, index);
+            double thisMax = actors[i]->GetMaxValueInRange(index - numBarsToDraw, index);
 
             if (thisMin < minValue)
                 minValue = thisMin;

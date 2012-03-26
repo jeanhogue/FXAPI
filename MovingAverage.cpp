@@ -21,7 +21,7 @@ void MovingAverage::Init()
     bufferIndex = 0;
 }
 
-void MovingAverage::OnNewBar(double sample)
+void MovingAverage::OnNewBar(double sample, int timeIndex)
 {
     buffer[bufferIndex] = sample;
     bufferIndex ++;

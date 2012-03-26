@@ -10,7 +10,7 @@ class IFXIndicator : public IFXActor
 public:
     // return value of the indicator at current bar
     virtual double GetValue() = 0;
-    virtual double GetSampleNBarsAgo(int n);
+    virtual double GetSampleAtIndex(int n);
 
     virtual double GetMinValueInRange(int start, int end);
     virtual double GetMaxValueInRange(int start, int end);

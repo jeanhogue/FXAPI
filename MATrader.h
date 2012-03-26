@@ -12,7 +12,7 @@ public:
     MATrader(CapitalManager *capitalManager, ObjectManager *objectManager);
 
     virtual void Init();
-    virtual void OnNewBar(double sample);
+    virtual void OnNewBar(double sample, int timeIndex);
 
 private:
     int GetState();

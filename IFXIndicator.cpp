@@ -2,11 +2,11 @@
 #include <cmath>
 
 
-double IFXIndicator::GetSampleNBarsAgo(int n)
+double IFXIndicator::GetSampleAtIndex(int n)
 {
     if (n >= (int)values.size())
         return 0;
-    return values[values.size() - 1 - n];
+    return values[n];
 }
 
 double IFXIndicator::GetMinValueInRange(int start, int end)

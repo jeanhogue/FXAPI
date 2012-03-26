@@ -13,7 +13,7 @@ public:
     ~OutputIndicatorDecorator();
 
     virtual void Init() { decoree->Init(); }
-    virtual void OnNewBar(double sample);
+    virtual void OnNewBar(double sample, int timeIndex);
 
     virtual double GetValue() { return decoree->GetValue(); }
 

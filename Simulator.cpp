@@ -29,20 +29,22 @@ void Simulator::RunOneBar()
 {
     currentSample = reader->GetNextTick();
     for (unsigned int i = 0; i < actors.size(); ++ i)
-        actors[i]->OnNewBar(currentSample);
+        actors[i]->OnNewBar(currentSample, currentIndex);
 
-    capitalManager->OnNewBar(currentSample);
+    capitalManager->OnNewBar(currentSample, currentIndex);
+
+    currentIndex ++;
 }
 
 void Simulator::GoForwardNBars(int nBars)
+{
+    currentIndex += nBars;
+ }
+
+void Simulator::GoBackNBars(int nBars)
 {
     if (currentIndex > nBars)
         currentIndex -= nBars;
     else
         currentIndex = 0;
-}
-
-void Simulator::GoBackNBars(int nBars)
-{
-    currentIndex += nBars;
 }

@@ -2,14 +2,14 @@
 #include "Order.h"
 
 
-Order::Order(double _volume, double price, double _takeProfits, double _stopLoss)
-: volume(_volume), openPrice(price), takeProfits(_takeProfits), stopLoss(_stopLoss), active(true)
+Order::Order(int _timeIndex, double _volume, double price, double _takeProfits, double _stopLoss)
+: timeIndex(_timeIndex), volume(_volume), openPrice(price), takeProfits(_takeProfits), stopLoss(_stopLoss), active(true)
 {
 }
 
 
-BuyOrder::BuyOrder(double volume, double price, double takeProfits, double stopLoss)
-: Order(volume, price, takeProfits, stopLoss)
+BuyOrder::BuyOrder(int timeIndex, double volume, double price, double takeProfits, double stopLoss)
+: Order(timeIndex, volume, price, takeProfits, stopLoss)
 {
 }
 
@@ -37,8 +37,8 @@ double BuyOrder::GetProfits()
 }
 
 
-SellOrder::SellOrder(double volume, double price, double takeProfits, double stopLoss)
-: Order(volume, price, takeProfits, stopLoss)
+SellOrder::SellOrder(int timeIndex, double volume, double price, double takeProfits, double stopLoss)
+: Order(timeIndex, volume, price, takeProfits, stopLoss)
 {
 }
 
@@ -58,12 +58,12 @@ double SellOrder::GetProfits()
 }
 
 
-Order *CreateOrder(OrderType type, double volume, double price, double takeProfits, double stopLoss)
+Order *CreateOrder(OrderType type, int timeIndex, double volume, double price, double takeProfits, double stopLoss)
 {
     if (type == tBUY)
-        return new BuyOrder(volume, price, takeProfits, stopLoss);
+        return new BuyOrder(timeIndex, volume, price, takeProfits, stopLoss);
     else if (type == tSELL)
-        return new SellOrder(volume, price, takeProfits, stopLoss);
+        return new SellOrder(timeIndex, volume, price, takeProfits, stopLoss);
     else
     {
         assert(0);

@@ -26,7 +26,7 @@ public:
     DataReader *GetDataReader() { return reader; }
 
     double GetCurrentSample() { return currentSample; }
-    int GetCurrentIndex() { return currentIndex; }
+    int GetCurrentIndex() { return currentIndex - 1; }
 
 private:
     DataReader *reader;

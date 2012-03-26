@@ -35,7 +35,7 @@ void CapitalManager::CloseAllOrders()
     }
 }
 
-void CapitalManager::OnNewBar(double sample)
+void CapitalManager::OnNewBar(double sample, int timeIndex)
 {
     for (size_t i = 0; i < orders.size(); ++ i)
     {

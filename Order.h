@@ -5,7 +5,7 @@
 class Order
 {
 public:
-    Order(double _volume, double price, double _takeProfits, double _stopLoss);
+    Order(int _timeIndex, double _volume, double price, double _takeProfits, double _stopLoss);
     
     virtual void OnNewBar(double sample) = 0;
 
@@ -15,6 +15,7 @@ public:
     void CloseOrder() { active = false; }
 
 protected:
+    int timeIndex;
     double volume;
 
     double openPrice;
@@ -34,7 +35,7 @@ protected:
 class BuyOrder : public Order
 {
 public:
-    BuyOrder(double volume, double price, double takeProfits, double stopLoss);
+    BuyOrder(int timeIndex, double volume, double price, double takeProfits, double stopLoss);
 
     virtual void OnNewBar(double sample);
     virtual double GetProfits();
@@ -44,7 +45,7 @@ public:
 class SellOrder : public Order
 {
 public:
-    SellOrder(double volume, double price, double takeProfits, double stopLoss);
+    SellOrder(int timeIndex, double volume, double price, double takeProfits, double stopLoss);
 
     virtual void OnNewBar(double sample);
     virtual double GetProfits();
@@ -57,6 +58,6 @@ enum OrderType
     tSELL,
 };
 
-Order *CreateOrder(OrderType type, double lots, double price, double takeProfits, double stopLoss);
+Order *CreateOrder(OrderType type, int timeIndex, double lots, double price, double takeProfits, double stopLoss);
 
 #endif

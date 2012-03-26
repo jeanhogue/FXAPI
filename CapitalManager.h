@@ -16,7 +16,7 @@ public:
     void AddOrder(Order *newOrder);
     void CloseAllOrders();
 
-    void OnNewBar(double sample);
+    void OnNewBar(double sample, int timeIndex);
 
     bool NoOpenedOrders();
 
