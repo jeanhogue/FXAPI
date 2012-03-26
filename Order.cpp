@@ -7,19 +7,6 @@ Order::Order(double _volume, double price, double _takeProfits, double _stopLoss
 {
 }
 
-/*
-volume 1 = 100,000$
-
-leverage 1:100 => to buy volume 1 (1 lot), need 1000$
-
-1.2345 -> 1.2348 (3 pips) = 0.0003 * 100,000 * 1 = 30$
-*/
-
-double Order::GetProfits()
-{
-    return (closePrice - openPrice) * volume * 100000;
-}
-
 
 BuyOrder::BuyOrder(double volume, double price, double takeProfits, double stopLoss)
 : Order(volume, price, takeProfits, stopLoss)
@@ -36,6 +23,19 @@ void BuyOrder::OnNewBar(double sample)
     }
 }
 
+/*
+volume 1 = 100,000$
+
+leverage 1:100 => to buy volume 1 (1 lot), need 1000$
+
+1.2345 -> 1.2348 (3 pips) = 0.0003 * 100,000 * 1 = 30$
+*/
+
+double BuyOrder::GetProfits()
+{
+    return (closePrice - openPrice) * volume * 100000;
+}
+
 
 SellOrder::SellOrder(double volume, double price, double takeProfits, double stopLoss)
 : Order(volume, price, takeProfits, stopLoss)
@@ -50,6 +50,11 @@ void SellOrder::OnNewBar(double sample)
         closePrice = sample;
         active = false;
     }
+}
+
+double SellOrder::GetProfits()
+{
+    return (openPrice - closePrice) * volume * 100000;
 }
 
 

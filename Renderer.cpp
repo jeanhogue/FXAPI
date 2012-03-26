@@ -8,20 +8,32 @@
 #include "RenderingUtils.h"
 #include "IFXIndicator.h"
 #include "TradingBot.h"
+#include "ObjectManager.h"
+#include "Object.h"
 
 
-Renderer::Renderer(Simulator *_simulator)
-: simulator(_simulator), offsetFromLatestBar(0), numBarsToDraw(30)
+Renderer::Renderer(Simulator *_simulator, ObjectManager *_objectManager)
+: simulator(_simulator), objectManager(_objectManager), offsetFromLatestBar(0), numBarsToDraw(30)
 {
     reader = simulator->GetDataReader();
     CalculateMinMaxValues();
 }
 
+void Renderer::RenderBorders(float normBorderX, float normBorderY)
+{
+    glColor3f(0.8f, 0.8f, 0.8f);
+    RenderScalesX(normBorderX, normBorderY);
+    RenderScalesY(normBorderX, normBorderY);
+
+    glColor3f(1, 1, 1);
+    DrawRectangleBorder(normBorderX, normBorderY, 1 - normBorderX, 1 - normBorderY);
+}
+
 void Renderer::Render()
 {
-    RenderScales();
     RenderData();
     RenderActors();
+    RenderObjects();
 }
 
 void Renderer::KeyPressed(unsigned char key)
@@ -71,166 +83,27 @@ float Renderer::PixelsToWorldY(float y)
     return y / height;
 }
 
-void Renderer::RenderScales()
+void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 {
-    RenderScalesX();
-    RenderScalesY();
 }
 
-double GetStep(double minValue, double maxValue)
+void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 {
-    /*if (abs(maxValue - minValue) < 1e-10)
-        return 1;
+    int numLinesToDraw = height / 75;
 
-    // slide until we get only one significant digit
-    double tmpMin = minValue;
-    double tmpMax = maxValue;
-    int slides = 0;
-    if (std::min(abs(minValue), abs(maxValue)) >= 1)
+    float renderingAreaY = 1 - normBorderY * 2;
+
+    glColor3f(1, 1, 1);
+    for (int i = 1; i < numLinesToDraw + 1; ++ i)
     {
-        int i = 0;
-        while (abs(tmpMin) >= 10 && abs(tmpMax) >= 10 && i ++ < 10000)
-        {
-            tmpMin /= 10;
-            tmpMax /= 10;
-            slides ++;
-        }
-
-        i = 0;
-        while ((int)tmpMax - (int)tmpMin <= 1 && i ++ < 10000)
-        {
-            tmpMax *= 10;
-            tmpMin *= 10;
-            slides --;
-        }
-
-        tmpMax = (double)(int)tmpMax;
-        tmpMin = (double)(int)tmpMin;
-
-        int R = (int)(tmpMin - ((int)tmpMin % 5) + 5);
-
-        if (R > tmpMax)
-        {
-            R = (int)((tmpMin + tmpMax) / 2);
-            if (R % 2 == 1)
-                R ++;
-        }
-
-        return R * pow(10.f, slides);
-    }
-    else
-    {
-        int i = 0;
-        while (abs(tmpMin) < 1 && abs(tmpMax) < 1 && i ++ < 10000)
-        {
-            tmpMin *= 10;
-            tmpMax *= 10;
-            slides ++;
-        }
-
-        i = 0;
-        while ((int)tmpMax - (int)tmpMin <= 1 && i ++ < 10000)
-        {
-            tmpMax *= 10;
-            tmpMin *= 10;
-            slides ++;
-        }
-
-        tmpMax = (double)(int)tmpMax;
-        tmpMin = (double)(int)tmpMin;
-
-        int R = (int)(tmpMin - ((int)tmpMin % 5) + 5);
-
-        if (R > tmpMax)
-        {
-            R = (int)((tmpMin + tmpMax) / 2);
-            if (R % 2 == 1)
-                R ++;
-        }
-
-        return R * pow(10.f, -slides);
-    }*/
-    return 1;
-}
-
-void Renderer::RenderScalesX()
-{
-
-}
-
-void Renderer::RenderScalesY()
-{
-    // check to avoid infinite loop
-    /*if (maxValue - minValue > 1e30)
-        return;
-
-    static const int gridMinPixelCount = 40;
-    static const int gridMaxPixelCount = 70;
-
-    double referencePoint = 0;
-    if (minValue < 0 && maxValue > 0)
-    {
-        // put the reference point where the 0 of the data is
-        referencePoint = 0;
-    }
-    else
-    {
-        // put the reference point at a easily human readable place
-        referencePoint = GetStep(minValue, maxValue);
-        if (referencePoint < minValue)
-            referencePoint = minValue;
-    }
-
-    float ratioMinPixels = gridMinPixelCount / (height - 2 * borderH);
-    float ratioMaxPixels = gridMaxPixelCount / (height - 2 * borderH);
-    int count = 0;
-    while (ratioMaxPixels > 0.85f && count ++ < 10)
-    {
-        // to solve the problem where the max pixel threshold is above the window dimension
-        // and no grid lines are shown,
-        // decrease the min/max thresholds until at least one grid line will fit
-        ratioMinPixels = gridMinPixelCount / (count + 1) / (height - 2 * borderH);
-        ratioMaxPixels = gridMaxPixelCount / (count + 1) / (height - 2 * borderH);
-    }
-
-    double step = abs(GetStep(ratioMinPixels * (maxValue - minValue), ratioMaxPixels * (maxValue - minValue)));
-
-    // infinite loop check
-    if (step <= 1e-10)
-        return;
-
-    // draw the X axis scale lines
-    double startPoint = referencePoint;
-    int negCount = 0;
-    while (startPoint > minValue)
-    {
-        startPoint -= step;
-        negCount ++;
-    }
-    negCount --;
-    
-    glViewport(offsetX + borderW, offsetY + borderH, width - 2 * borderW, height - 2 * borderH);
-    
-    for (double i = startPoint + step, count = 0; i < maxValue; i += step, count ++)
-    {
-        glColor3f(0.65f, 0.65f, 0.65f);
-        DrawLineStipple(0, (i - minValue) / (maxValue - minValue),
-                        1, (i - minValue) / (maxValue - minValue));
-    }
-
-    glViewport(offsetX, offsetY, width, height);
-
-    // draw the y axis scale numbers
-    glColor3f(0.2f, 0.2f, 0.2f);
-    for (double i = startPoint + step, count = 0; i < maxValue; i += step, count ++)
-    {
-        float y = PixelsToWorldY(borderH + (i - minValue) / (maxValue - minValue) * (height - 2 * borderH), false);
+        float ratio = i / (float)(numLinesToDraw + 1);
+        float y = normBorderY + (1 - 2 * normBorderY) * ratio;
+        DrawLine(normBorderX, y, 1 - normBorderX, y);
 
         std::stringstream ss;
-        ss << i;
-
-        RenderText(*dc, PixelsToWorldX(borderW * 4 / 5, false), CheckFlipY(y), wxString(ss.str().c_str(), wxConvUTF8), eFtSmall, eCentered, 90.0);
-    }*/
+        ss << (maxValue - minValue) * ratio;
+        Print(ss.str(), 0.94f, y);
+    }
 }
 
 void Renderer::RenderData()
@@ -299,6 +172,14 @@ void Renderer::RenderActor(IFXIndicator *actor)
             lastPointY = y;
         }
     }
+}
+
+void Renderer::RenderObjects()
+{
+    std::vector<Object *> objects = objectManager->GetObjects();
+
+    for (unsigned int i = 0; i < objects.size(); ++ i)
+        objects[i]->Render();
 }
 
 void Renderer::CalculateMinMaxValues()

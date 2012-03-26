@@ -257,6 +257,26 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Objects"
+				>
+				<File
+					RelativePath=".\Object.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Object.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ObjectManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ObjectManager.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Data"

@@ -6,8 +6,8 @@
 int win;
 int width;
 int height;
-float borderX = 30;
-float borderY = 20;
+float borderX = 60;
+float borderY = 40;
 Renderer *renderer;
 
 void disp();
@@ -24,7 +24,7 @@ void StartRendering(int argc, char **argv, Renderer *_renderer)
 
     glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
 
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(800, 600);
 
     win = glutCreateWindow("FXAPI");
 
@@ -50,8 +50,7 @@ void disp()
     float normBorderX = borderX / width;
     float normBorderY = borderY / height;
 
-    glColor3f(1, 1, 1);
-    DrawRectangleBorder(normBorderX, normBorderY, 1 - normBorderX, 1 - normBorderY);
+    renderer->RenderBorders(normBorderX, normBorderY);
 
     glViewport(width * normBorderX, height * normBorderY, width - 2 * (width * normBorderX), height - 2 * (height * normBorderY));
 

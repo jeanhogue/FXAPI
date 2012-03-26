@@ -9,6 +9,7 @@
 #include "RandomDataGenerator.h"
 #include "IFXActor.h"
 #include "Simulator.h"
+#include "ObjectManager.h"
 #include "MovingAverage.h"
 #include "OutputIndicatorDecorator.h"
 #include "MATrader.h"
@@ -30,22 +31,30 @@ int main(int argc, char **argv)
 {
     atexit(Cleanup);
 
+    capitalManager.SetFunds(10000);
+
+    ObjectManager objectManager;
+
     //dataManager.AddData(new CSVReader("Data/Q1_3600_1000.csv", t1H));
-    dataManager.AddData(new RandomDataGenerator(1.20, 100));
+    dataManager.AddData(new RandomDataGenerator(1.20, 1000));
 
     //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
-    loadedActors.push_back(new MATrader(&capitalManager));
+    loadedActors.push_back(new MATrader(&capitalManager, &objectManager));
     
     Simulator simulator(dataManager.GetData(0), loadedActors, &capitalManager);
 
     simulator.Init();
     simulator.Run();
 
+    capitalManager.PrintReport();
+
     if (USE_RENDERER)
     {
-        Renderer renderer(&simulator);
+        Renderer renderer(&simulator, &objectManager);
         StartRendering(argc, argv, &renderer);
     }
+    else
+        system("PAUSE");
 
     return 0;
 }

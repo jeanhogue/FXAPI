@@ -9,9 +9,10 @@ public:
     
     virtual void OnNewBar(double sample) = 0;
 
-    double GetProfits();
+    virtual double GetProfits() = 0;
 
     bool IsActive() { return active; }
+    void CloseOrder() { active = false; }
 
 protected:
     double volume;
@@ -36,6 +37,7 @@ public:
     BuyOrder(double volume, double price, double takeProfits, double stopLoss);
 
     virtual void OnNewBar(double sample);
+    virtual double GetProfits();
 };
 
 
@@ -45,6 +47,7 @@ public:
     SellOrder(double volume, double price, double takeProfits, double stopLoss);
 
     virtual void OnNewBar(double sample);
+    virtual double GetProfits();
 };
 
 

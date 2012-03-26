@@ -2,8 +2,8 @@
 #include "MovingAverage.h"
 
 
-MATrader::MATrader(CapitalManager *capitalManager)
-: TradingBot(capitalManager)
+MATrader::MATrader(CapitalManager *capitalManager, ObjectManager *objectManager)
+: TradingBot(capitalManager, objectManager)
 {
 }
 
@@ -30,7 +30,7 @@ void MATrader::OnNewBar(double sample)
 
     int newState = GetState();
 
-    if (barCount >= INIT_PERIOD && capitalManager->NoOpenedOrders())
+    if (barCount >= INIT_PERIOD)
     {
         if (newState != state)
         {

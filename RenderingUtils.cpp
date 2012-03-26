@@ -96,12 +96,9 @@ void DrawCircleBorder(float x, float y, float radiusX, float radiusY, int step)
 
 void Print(std::string str, float x, float y)
 {
-    glLoadIdentity();
-    glRasterPos2i(x, y);
+    glDisable(GL_TEXTURE_2D);
+    glRasterPos2f(x, y);
 
     for (std::string::iterator i = str.begin(); i != str.end(); ++ i)
-    {
-        char c = *i;
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c);
-    }
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *i);
 }

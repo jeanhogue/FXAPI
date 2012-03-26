@@ -7,13 +7,15 @@
 #include "CapitalManager.h"
 
 
+class ObjectManager;
+
 class TradingBot : public IFXActor
 {
 public:
-    TradingBot(CapitalManager *_capitalManager);
+    TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectManager);
 
-    void Buy(double price);
-    void Sell(double price);
+    void Buy(double price, int timeIndex);
+    void Sell(double price, int timeIndex);
 
     virtual bool IsTrader() { return true; }
 
@@ -21,6 +23,7 @@ public:
 
 protected:
     CapitalManager *capitalManager;
+    ObjectManager *objectManager;
 
     std::vector<IFXIndicator *> indicators;
 };

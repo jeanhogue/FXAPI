@@ -5,7 +5,7 @@
 RandomDataGenerator::RandomDataGenerator(double _startPrice, int _numBars)
 : DataReader(t1H), startPrice(_startPrice), range(_startPrice * 0.02), numBars(_numBars), momentum(0)
 {
-    srand(time(NULL));
+    //srand(time(NULL));
 }
 
 double RandomDataGenerator::GetNextTick()

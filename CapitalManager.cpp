@@ -1,14 +1,16 @@
+#include <iostream>
 #include "CapitalManager.h"
 
 
 CapitalManager::CapitalManager()
-: equity(0), balance(0), leverage(100)
+: equity(0), leverage(100), barCount(0)
 {
 }
 
-void CapitalManager::SetFunds(double _balance)
+void CapitalManager::SetFunds(double balance)
 {
-    balance = _balance;
+    startBalance = balance;
+    currentBalance = balance;
 }
 
 void CapitalManager::SetLeverage(double _leverage)
@@ -18,29 +20,53 @@ void CapitalManager::SetLeverage(double _leverage)
 
 void CapitalManager::AddOrder(Order *newOrder)
 {
-    openedOrders.push_back(newOrder);
+    orders.push_back(newOrder);
 }
 
-void CapitalManager::OnNewBar(double sample)
+void CapitalManager::CloseAllOrders()
 {
-    for (size_t i = 0; i < openedOrders.size(); ++ i)
+    for (size_t i = 0; i < orders.size(); ++ i)
     {
-        if (openedOrders[i]->IsActive())
+        if (orders[i]->IsActive())
         {
-            openedOrders[i]->OnNewBar(sample);
-
-            // if the order was closed on this bar, adjust the balance according to the profits/losses
-            balance += openedOrders[i]->GetProfits();
+            orders[i]->CloseOrder();
+            currentBalance += orders[i]->GetProfits();
         }
     }
 }
 
+void CapitalManager::OnNewBar(double sample)
+{
+    for (size_t i = 0; i < orders.size(); ++ i)
+    {
+        if (orders[i]->IsActive())
+        {
+            orders[i]->OnNewBar(sample);
+
+            if (!orders[i]->IsActive())
+            {
+                // if the order was closed on this bar, adjust the balance according to the profits/losses
+                currentBalance += orders[i]->GetProfits();
+            }
+        }
+    }
+
+    barCount ++;
+}
+
 bool CapitalManager::NoOpenedOrders()
 {
-    for (size_t i = 0; i < openedOrders.size(); ++ i)
+    for (size_t i = 0; i < orders.size(); ++ i)
     {
-        if (openedOrders[i]->IsActive())
+        if (orders[i]->IsActive())
             return false;
     }
     return true;
+}
+
+void CapitalManager::PrintReport()
+{
+    std::cout << "Start balance = " << startBalance << ", End Balance = " << currentBalance << ", Profits = " << (currentBalance - startBalance) / startBalance  * 100 << "%" << std::endl;
+    std::cout << "Number orders = " << orders.size() << std::endl;
+    std::cout << "Number bars = " << barCount << std::endl;
 }

@@ -21,6 +21,8 @@ void Simulator::Run()
         RunOneBar();
     }
     while (!reader->EndOfData());
+
+    capitalManager->CloseAllOrders();
 }
 
 void Simulator::RunOneBar()

@@ -10,21 +10,27 @@ class CapitalManager
 public:
     CapitalManager();
 
-    void SetFunds(double _balance);
+    void SetFunds(double balance);
     void SetLeverage(double _leverage);
 
     void AddOrder(Order *newOrder);
+    void CloseAllOrders();
 
     void OnNewBar(double sample);
 
     bool NoOpenedOrders();
 
+    void PrintReport();
+
 private:
-    double balance;
+    double startBalance;
+    double currentBalance;
     double equity;
     double leverage;
 
-    std::vector<Order *> openedOrders;
+    unsigned int barCount;
+
+    std::vector<Order *> orders;
 };
 
 

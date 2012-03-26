@@ -3,6 +3,7 @@
 
 
 class Simulator;
+class ObjectManager;
 class DataReader;
 class TradingBot;
 
@@ -11,8 +12,9 @@ class IFXIndicator;
 class Renderer
 {
 public:
-    Renderer(Simulator *_simulator);
+    Renderer(Simulator *_simulator, ObjectManager *_objectManager);
 
+    void RenderBorders(float normBorderX, float normBorderY);
     void Render();
 
     void KeyPressed(unsigned char key);
@@ -22,17 +24,18 @@ private:
     float PixelsToWorldX(float x);
     float PixelsToWorldY(float y);
 
-    void RenderScales();
-    void RenderScalesX();
-    void RenderScalesY();
+    void RenderScalesX(float normBorderX, float normBorderY);
+    void RenderScalesY(float normBorderX, float normBorderY);
     void RenderData();
     void RenderActors();
     void RenderTrader(TradingBot *trader);
     void RenderActor(IFXIndicator *actor);
+    void RenderObjects();
 
     void CalculateMinMaxValues();
 
     Simulator *simulator;
+    ObjectManager *objectManager;
     DataReader *reader;
 
     int offsetFromLatestBar;
