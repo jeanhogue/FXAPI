@@ -141,7 +141,7 @@ void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 
 void Renderer::RenderData()
 {
-    float SPACE_BETWEEN_BARS = PixelsToWorldX(5);
+    float SPACE_BETWEEN_BARS = PixelsToWorldX(3);
     float POINT_WIDTH = PixelsToWorldX((float)width / numBarsToDraw) - SPACE_BETWEEN_BARS;
     float POINT_HEIGHT = PixelsToWorldY(5);
 
