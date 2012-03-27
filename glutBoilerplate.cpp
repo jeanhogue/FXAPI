@@ -12,6 +12,7 @@ Renderer *renderer;
 
 void disp();
 void keyb(unsigned char key, int x, int y);
+void mous(int x, int y);
 void reshape(int w, int h);
 
 
@@ -30,7 +31,10 @@ void StartRendering(int argc, char **argv, Renderer *_renderer)
 
     glutDisplayFunc(disp);
     glutKeyboardFunc(keyb);
+    glutPassiveMotionFunc(mous);
     glutReshapeFunc(reshape);
+
+    glutSetCursor(GLUT_CURSOR_CROSSHAIR);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -65,13 +69,18 @@ void disp()
 
 void keyb(unsigned char key, int x, int y)
 {
-    if (key == 'q')
+    if (key == 27)      // ESC key
     {
         glutDestroyWindow(win);
         exit(0);
     }
     else
         renderer->KeyPressed(key);
+}
+
+void mous(int x, int y)
+{
+    renderer->OnMotion(x, y);
 }
 
 void reshape(int w, int h)

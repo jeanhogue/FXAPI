@@ -22,7 +22,7 @@ TextObj::TextObj(std::string _str, int timeIndex, double price)
 
 void TextObj::Render(int latestBarIndex, int numBarsToDraw, double minValue, double maxValue)
 {
-    glColor3f(0, 1, 0);
+    glColor3f(0, 0, 1);
 
     float x = 1 - (latestBarIndex - timeIndex) / (float)numBarsToDraw;
     float y = (price - minValue) / (maxValue - minValue);
@@ -38,7 +38,7 @@ OrderBar::OrderBar(int timeIndex, double price, double _takeProfit, double _stop
 
 void OrderBar::Render(int latestBarIndex, int numBarsToDraw, double minValue, double maxValue)
 {
-    glColor3f(0, 1, 0);
+    glColor3f(0, 1, 1);
     
     float x1 = 1 - (latestBarIndex - timeIndex) / (float)numBarsToDraw;
     float x2 = 1 - (latestBarIndex - timeIndex - 1) / (float)numBarsToDraw;

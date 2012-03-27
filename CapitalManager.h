@@ -14,7 +14,9 @@ public:
     void SetLeverage(double _leverage);
 
     void AddOrder(Order *newOrder);
+    int GetNumOrders();
     void CloseAllOrders();
+    Order *GetOrder(int index) { return orders[index]; }
 
     void OnNewBar(double sample, int timeIndex);
 

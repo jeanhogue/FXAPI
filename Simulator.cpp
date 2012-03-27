@@ -4,7 +4,7 @@
 
 
 Simulator::Simulator(DataReader *_reader, std::vector<IFXActor *> _actors, CapitalManager *_capitalManager)
-: reader(_reader), actors(_actors), capitalManager(_capitalManager), currentIndex(0)
+: reader(_reader), actors(_actors), capitalManager(_capitalManager), currentIndex(0), currentOrder(0)
 {
 }
 
@@ -23,6 +23,8 @@ void Simulator::Run()
     while (!reader->EndOfData());
 
     capitalManager->CloseAllOrders();
+
+    currentOrder = capitalManager->GetNumOrders() - 1;
 }
 
 void Simulator::RunOneBar()
@@ -47,4 +49,26 @@ void Simulator::GoBackNBars(int nBars)
         currentIndex -= nBars;
     else
         currentIndex = 0;
+}
+
+bool Simulator::GoToPreviousOrder()
+{
+    if (currentOrder <= 0)
+        return false;
+
+    currentOrder --;
+    currentIndex = capitalManager->GetOrder(currentOrder)->GetTimeIndex();
+
+    return true;
+}
+
+bool Simulator::GoToNextOrder()
+{
+    if (currentOrder >= capitalManager->GetNumOrders() - 1)
+        return false;
+
+    currentOrder ++;
+    currentIndex = capitalManager->GetOrder(currentOrder)->GetTimeIndex();
+ 
+    return true;
 }

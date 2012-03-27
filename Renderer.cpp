@@ -13,7 +13,7 @@
 
 
 Renderer::Renderer(Simulator *_simulator, ObjectManager *_objectManager)
-: simulator(_simulator), objectManager(_objectManager), numBarsToDraw(30)
+: simulator(_simulator), objectManager(_objectManager), numBarsToDraw(50)
 {
     reader = simulator->GetDataReader();
     CalculateMinMaxValues();
@@ -27,28 +27,53 @@ void Renderer::RenderBorders(float normBorderX, float normBorderY)
 
     glColor3f(1, 1, 1);
     DrawRectangleBorder(normBorderX, normBorderY, 1 - normBorderX, 1 - normBorderY);
+
+    DrawLine(mouseX, 0, mouseX, 1);
+    DrawLine(0, mouseY, 1, mouseY);
+
+    // print the price value next to the cursor
+    double diff = maxValue - minValue;
+    double middle = (maxValue + minValue) / 2;
+    double delta = diff * height / (height - 2 * normBorderY * height) / 2;
+    double fullMaxValue = middle + delta;
+    double fullMinValue = middle - delta;
+    std::stringstream ss;
+    ss << fullMinValue + mouseY * (fullMaxValue - fullMinValue);
+    Print(ss.str(), mouseX + PixelsToWorldX(5), mouseY + PixelsToWorldY(5));
 }
 
 void Renderer::Render()
 {
     RenderData();
-    RenderActors();
+    RenderActors(simulator->GetActors());
     RenderObjects();
 }
 
 void Renderer::KeyPressed(unsigned char key)
 {
-    if (key == 'o')      // right arrow
+    if (key == 'o')
     {
         simulator->GoForwardNBars(5);
         CalculateMinMaxValues();
     }
-    else if (key == 'a')     // left arrow
+    else if (key == 'a')
     {
         simulator->GoBackNBars(5);
         CalculateMinMaxValues();
     }
-    else if (key == '+' || key == '=')
+    else if (key == ';')
+    {
+        if (simulator->GoToPreviousOrder())
+            simulator->GoForwardNBars(numBarsToDraw / 2);
+        CalculateMinMaxValues();
+    }
+    else if (key == 'q')
+    {
+        if (simulator->GoToNextOrder())
+            simulator->GoForwardNBars(numBarsToDraw / 2);
+        CalculateMinMaxValues();
+    }
+    else if (key == '-')
     {
         if (numBarsToDraw < 1000)
         {
@@ -56,7 +81,7 @@ void Renderer::KeyPressed(unsigned char key)
             CalculateMinMaxValues();
         }
     }
-    else if (key == '-')
+    else if (key == '+' || key == '=')
     {
         if (numBarsToDraw > 5)
         {
@@ -64,6 +89,14 @@ void Renderer::KeyPressed(unsigned char key)
             CalculateMinMaxValues();
         }
     }
+    glutPostRedisplay();
+}
+
+void Renderer::OnMotion(int x, int y)
+{
+    mouseX = (float)x / width;
+    mouseY = 1 - (float)y / height;
+
     glutPostRedisplay();
 }
 
@@ -91,17 +124,17 @@ void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 {
     int numLinesToDraw = height / 75;
 
-    float renderingAreaY = 1 - normBorderY * 2;
+    double diff = maxValue - minValue;
 
     glColor3f(1, 1, 1);
     for (int i = 1; i < numLinesToDraw + 1; ++ i)
     {
         float ratio = i / (float)(numLinesToDraw + 1);
         float y = normBorderY + (1 - 2 * normBorderY) * ratio;
-        DrawLine(normBorderX, y, 1 - normBorderX, y);
+        DrawLine(1 - normBorderX, y, 1 - normBorderX * 2 / 3, y);
 
         std::stringstream ss;
-        ss << (maxValue - minValue) * ratio;
+        ss << minValue + diff * ratio;
         Print(ss.str(), 0.94f, y);
     }
 }
@@ -114,36 +147,27 @@ void Renderer::RenderData()
 
     int index = simulator->GetCurrentIndex();
 
+    double diff = maxValue - minValue;
+
     glColor3f(0, 1, 0);
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
         double sample = reader->GetSampleAtIndex(index - i);
         float x = 1 - i / (float)numBarsToDraw;
-        float y = (sample - minValue) / (maxValue - minValue);
+        float y = (sample - minValue) / diff;
         
         DrawRectangle(x - POINT_WIDTH / 2, y - POINT_HEIGHT, x + POINT_WIDTH / 2, y + POINT_HEIGHT);
     }
 }
 
-void Renderer::RenderActors()
+void Renderer::RenderActors(std::vector<IFXActor *> actors)
 {
-    std::vector<IFXActor *> actors = simulator->GetActors();
     for (unsigned int i = 0; i < actors.size(); ++ i)
     {
         if (actors[i]->IsIndicator())
             RenderActor((IFXIndicator *)actors[i]);
         else if (actors[i]->IsTrader())
-            RenderTrader((TradingBot *)actors[i]);
-    }
-}
-
-void Renderer::RenderTrader(TradingBot *trader)
-{
-    std::vector<IFXIndicator *> indicators = trader->GetIndicators();
-
-    for (unsigned int i = 0; i < indicators.size(); ++ i)
-    {
-        RenderActor(indicators[i]);
+            RenderActors(((TradingBot *)actors[i])->GetIndicators());
     }
 }
 
@@ -154,7 +178,7 @@ void Renderer::RenderActor(IFXIndicator *actor)
 
     int index = simulator->GetCurrentIndex();
 
-    glColor3f(1, 0, 0);
+    SetColor(actor->GetColor());
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
         double sample = actor->GetSampleAtIndex(index - i);
@@ -198,19 +222,19 @@ void Renderer::CalculateMinMaxValues()
     std::vector<IFXActor *> actors = simulator->GetActors();
     for (unsigned int i = 0; i < actors.size(); ++ i)
     {
-        if (actors[i]->IsIndicator())
-        {
-            double thisMin = actors[i]->GetMinValueInRange(index - numBarsToDraw, index);
-            double thisMax = actors[i]->GetMaxValueInRange(index - numBarsToDraw, index);
+        if (!actors[i]->IsIndicator())
+            continue;
+        
+        double thisMin = actors[i]->GetMinValueInRange(index - numBarsToDraw, index);
+        double thisMax = actors[i]->GetMaxValueInRange(index - numBarsToDraw, index);
 
-            if (thisMin < minValue)
-                minValue = thisMin;
-            if (thisMax > maxValue)
-                thisMax = maxValue;
-        }
+        if (thisMin < minValue)
+            minValue = thisMin;
+        if (thisMax > maxValue)
+            thisMax = maxValue;
     }
 
     double diff = maxValue - minValue;
-    minValue -= diff * 0.1f;
-    maxValue += diff * 0.1f;
+    minValue -= diff * 0.05;
+    maxValue += diff * 0.05;
 }

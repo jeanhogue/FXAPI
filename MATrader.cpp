@@ -9,11 +9,14 @@ MATrader::MATrader(CapitalManager *capitalManager, ObjectManager *objectManager)
 
 void MATrader::Init()
 {
-    slowMA = CreateMA(tEMA, 8);
+    slowMA = CreateMA(tEMA, 13);
     fastMA = CreateMA(tEMA, 5);
  
     slowMA->Init();
     fastMA->Init();
+
+    slowMA->SetColor(200, 20, 133);
+    fastMA->SetColor(123, 104, 238);
 
     indicators.push_back(slowMA);
     indicators.push_back(fastMA);

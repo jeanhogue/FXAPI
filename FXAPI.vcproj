@@ -162,35 +162,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CapitalManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CapitalManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Defs.h"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Order.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Order.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Simulator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Simulator.h"
 				>
 			</File>
 		</Filter>
@@ -234,14 +206,30 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Traders"
+				Name="Trades"
 				>
+				<File
+					RelativePath=".\CapitalManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CapitalManager.h"
+					>
+				</File>
 				<File
 					RelativePath=".\MATrader.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\MATrader.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Order.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Order.h"
 					>
 				</File>
 				<Filter
@@ -335,6 +323,30 @@
 			</File>
 			<File
 				RelativePath=".\RenderingUtils.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Misc"
+			>
+			<File
+				RelativePath=".\Colors.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Defs.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Simulation"
+			>
+			<File
+				RelativePath=".\Simulator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Simulator.h"
 				>
 			</File>
 		</Filter>

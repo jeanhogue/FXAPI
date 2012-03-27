@@ -20,7 +20,7 @@ private:
     double startPrice;
     double range;
     int numBars;
-    double momentum;
+    double lastSample;
 };
 
 

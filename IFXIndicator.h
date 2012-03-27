@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "IFXActor.h"
+#include "Colors.h"
 
 
 class IFXIndicator : public IFXActor
@@ -15,10 +16,14 @@ public:
     virtual double GetMinValueInRange(int start, int end);
     virtual double GetMaxValueInRange(int start, int end);
 
+    void SetColor(int r, int g, int b);
+    Color &GetColor() { return color; }
     virtual bool IsIndicator() { return true; }
 
 protected:
     std::vector<double> values;
+
+    Color color;
 };
 
 

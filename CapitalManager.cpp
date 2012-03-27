@@ -23,6 +23,11 @@ void CapitalManager::AddOrder(Order *newOrder)
     orders.push_back(newOrder);
 }
 
+int CapitalManager::GetNumOrders()
+{
+    return orders.size();
+}
+
 void CapitalManager::CloseAllOrders()
 {
     for (size_t i = 0; i < orders.size(); ++ i)

@@ -11,6 +11,7 @@ public:
 
     virtual double GetProfits() = 0;
 
+    int GetTimeIndex() { return timeIndex; }
     bool IsActive() { return active; }
     void CloseOrder() { active = false; }
 

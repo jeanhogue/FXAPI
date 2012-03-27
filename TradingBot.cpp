@@ -2,22 +2,25 @@
 #include "Order.h"
 #include "ObjectManager.h"
 #include "Object.h"
+#include "Defs.h"
 
 
 TradingBot::TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectManager)
 : capitalManager(_capitalManager), objectManager(_objectManager)
 {
+    takeProfit = PipsToPrice(50);
+    stopLosses = PipsToPrice(20);
+    lots = 0.1;
 }
 
 void TradingBot::Buy(double price, int timeIndex)
 {
-    capitalManager->AddOrder(CreateOrder(tBUY, timeIndex, 0.1, price, price + 0.0050, price - 0.0020));
-    objectManager->AddObject(new OrderBar(timeIndex, price, price + 0.0050, price - 0.0020));
-    objectManager->AddObject(new TextObj("aaueu", timeIndex, price));
+    capitalManager->AddOrder(CreateOrder(tBUY, timeIndex, lots, price, price + takeProfit, price - stopLosses));
+    objectManager->AddObject(new OrderBar(timeIndex, price, price + takeProfit, price - stopLosses));
 }
 
 void TradingBot::Sell(double price, int timeIndex)
 {
-    capitalManager->AddOrder(CreateOrder(tSELL, timeIndex, 0.1, price, price - 0.0050, price + 0.0020));
-    objectManager->AddObject(new OrderBar(timeIndex, price, price - 0.0050, price + 0.0020));
+    capitalManager->AddOrder(CreateOrder(tSELL, timeIndex, lots, price, price - takeProfit, price + stopLosses));
+    objectManager->AddObject(new OrderBar(timeIndex, price, price - takeProfit, price + stopLosses));
 }

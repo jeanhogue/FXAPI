@@ -1,12 +1,14 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
+#include <vector>
 
 class Simulator;
 class ObjectManager;
 class DataReader;
 class TradingBot;
 
+class IFXActor;
 class IFXIndicator;
 
 class Renderer
@@ -18,6 +20,7 @@ public:
     void Render();
 
     void KeyPressed(unsigned char key);
+    void OnMotion(int x, int y);
     void SetDimensions(int _width, int _height);
 
 private:
@@ -27,8 +30,7 @@ private:
     void RenderScalesX(float normBorderX, float normBorderY);
     void RenderScalesY(float normBorderX, float normBorderY);
     void RenderData();
-    void RenderActors();
-    void RenderTrader(TradingBot *trader);
+    void RenderActors(std::vector<IFXActor *> actors);
     void RenderActor(IFXIndicator *actor);
     void RenderObjects();
 
@@ -44,6 +46,9 @@ private:
 
     int width;
     int height;
+
+    float mouseX;
+    float mouseY;
 };
 
 

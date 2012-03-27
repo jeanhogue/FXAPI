@@ -19,13 +19,17 @@ public:
 
     virtual bool IsTrader() { return true; }
 
-    std::vector<IFXIndicator *> GetIndicators() { return indicators; }
+    std::vector<IFXActor *> GetIndicators() { return indicators; }
 
 protected:
     CapitalManager *capitalManager;
     ObjectManager *objectManager;
 
-    std::vector<IFXIndicator *> indicators;
+    double takeProfit;
+    double stopLosses;
+    double lots;
+
+    std::vector<IFXActor *> indicators;
 };
 
 #endif

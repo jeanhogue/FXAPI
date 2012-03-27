@@ -22,6 +22,9 @@ public:
     void GoForwardNBars(int nBars);
     void GoBackNBars(int nBars);
 
+    bool GoToPreviousOrder();
+    bool GoToNextOrder();
+
     std::vector<IFXActor *> GetActors() { return actors; }
     DataReader *GetDataReader() { return reader; }
 
@@ -35,6 +38,7 @@ private:
 
     double currentSample;
     int currentIndex;
+    int currentOrder;
 };
 
 
