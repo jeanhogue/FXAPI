@@ -13,6 +13,7 @@ class TradingBot : public IFXActor
 {
 public:
     TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectManager);
+    ~TradingBot();
 
     void Buy(double price, int timeIndex);
     void Sell(double price, int timeIndex);

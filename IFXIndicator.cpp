@@ -24,6 +24,9 @@ void IFXIndicator::Render(int index, int numBarsToDraw, double minValue, double 
         if (i > index)
             break;
 
+        if (index - i >= (int)values.size())
+            continue;
+
         double sample = GetSampleAtIndex(index - i);
         float x = 1 - i / (float)numBarsToDraw;
         float y = (sample - minValue) / (maxValue - minValue);
@@ -49,8 +52,10 @@ double IFXIndicator::GetMinValueInRange(int start, int end)
 {
     double minValue = HUGE_VAL;
 
-    int count = 0;
-    for (int i = (int)values.size() - 1 - start; i >= 0 && count < end - start; -- i, ++ count)
+    if (start < 0)
+        start = 0;
+
+    for (int i = start + 1; i < end && i < (int)values.size(); ++ i)
     {
         if (values[i] < minValue)
             minValue = values[i];
@@ -63,8 +68,10 @@ double IFXIndicator::GetMaxValueInRange(int start, int end)
 {
     double maxValue = HUGE_VAL;
 
-    int count = 0;
-    for (int i = (int)values.size() - 1 - start; i >= 0 && count < end - start; -- i, ++ count)
+    if (start < 0)
+        start = 0;
+
+    for (int i = start + 1; i < end && i < (int)values.size(); ++ i)
     {
         if (values[i] > maxValue)
             maxValue = values[i];

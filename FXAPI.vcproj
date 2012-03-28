@@ -177,6 +177,14 @@
 				Name="Indicators"
 				>
 				<File
+					RelativePath=".\BollingerBands.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BollingerBands.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MovingAverage.cpp"
 					>
 				</File>

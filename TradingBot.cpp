@@ -13,6 +13,13 @@ TradingBot::TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectMa
     lots = 0.1;
 }
 
+TradingBot::~TradingBot()
+{
+    for (unsigned int i = 0; i < indicators.size(); ++ i)
+        delete indicators[i];
+    indicators.clear();
+}
+
 void TradingBot::Buy(double price, int timeIndex)
 {
     capitalManager->AddOrder(CreateOrder(tBUY, timeIndex, lots, price, price + takeProfit, price - stopLosses));

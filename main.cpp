@@ -14,6 +14,7 @@
 #include "OutputIndicatorDecorator.h"
 #include "MATrader.h"
 #include "Renderer.h"
+#include "BollingerBands.h"
 
 DataManager dataManager;
 CapitalManager capitalManager;
@@ -36,10 +37,11 @@ int main(int argc, char **argv)
     ObjectManager objectManager;
 
     //dataManager.AddData(new CSVReader("Data/Q1_3600_1000.csv", t1H));
-    dataManager.AddData(new RandomDataGenerator(1.20, 50));
+    dataManager.AddData(new RandomDataGenerator(1.20, 150));
 
     //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
-    loadedActors.push_back(new MATrader(&capitalManager, &objectManager));
+    //loadedActors.push_back(new MATrader(&capitalManager, &objectManager));
+    loadedActors.push_back(new BollingerBands(6, 1));
     
     Simulator simulator(dataManager.GetData(0), loadedActors, &capitalManager);
 

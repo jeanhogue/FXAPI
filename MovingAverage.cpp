@@ -4,14 +4,15 @@
 
 
 MovingAverage::MovingAverage(int _period)
-: period(_period)
+: period(_period), buffer(0)
 {
     assert(period > 0 && period < 10000);
 }
 
 MovingAverage::~MovingAverage()
 {
-    delete [] buffer;
+    if (buffer)
+        delete [] buffer;
 }
 
 void MovingAverage::Init()
