@@ -10,6 +10,9 @@ double DataReader::GetSampleAtIndex(int n)
 
 double DataReader::GetMinValueInRange(int start, int end)
 {
+    if (start < 0)
+        start = 0;
+
     double min = data[start];
 
     for (int i = start + 1; i < end && i < (int)data.size(); ++ i)
@@ -23,6 +26,9 @@ double DataReader::GetMinValueInRange(int start, int end)
 
 double DataReader::GetMaxValueInRange(int start, int end)
 {
+    if (start < 0)
+        start = 0;
+
     double max = data[start];
 
     for (int i = start + 1; i < end && i < (int)data.size(); ++ i)

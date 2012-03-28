@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     ObjectManager objectManager;
 
     //dataManager.AddData(new CSVReader("Data/Q1_3600_1000.csv", t1H));
-    dataManager.AddData(new RandomDataGenerator(1.20, 1000));
+    dataManager.AddData(new RandomDataGenerator(1.20, 50));
 
     //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
     loadedActors.push_back(new MATrader(&capitalManager, &objectManager));

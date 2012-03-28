@@ -27,6 +27,7 @@ private:
     float PixelsToWorldX(float x);
     float PixelsToWorldY(float y);
 
+    void RenderCursor(float normBorderY);
     void RenderScalesX(float normBorderX, float normBorderY);
     void RenderScalesY(float normBorderX, float normBorderY);
     void RenderData();
@@ -47,6 +48,7 @@ private:
     int width;
     int height;
 
+    bool drawCursor;
     float mouseX;
     float mouseY;
 };

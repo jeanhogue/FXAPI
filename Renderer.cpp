@@ -13,7 +13,7 @@
 
 
 Renderer::Renderer(Simulator *_simulator, ObjectManager *_objectManager)
-: simulator(_simulator), objectManager(_objectManager), numBarsToDraw(50)
+: simulator(_simulator), objectManager(_objectManager), numBarsToDraw(20), drawCursor(false)
 {
     reader = simulator->GetDataReader();
     CalculateMinMaxValues();
@@ -28,18 +28,8 @@ void Renderer::RenderBorders(float normBorderX, float normBorderY)
     glColor3f(1, 1, 1);
     DrawRectangleBorder(normBorderX, normBorderY, 1 - normBorderX, 1 - normBorderY);
 
-    DrawLine(mouseX, 0, mouseX, 1);
-    DrawLine(0, mouseY, 1, mouseY);
-
-    // print the price value next to the cursor
-    double diff = maxValue - minValue;
-    double middle = (maxValue + minValue) / 2;
-    double delta = diff * height / (height - 2 * normBorderY * height) / 2;
-    double fullMaxValue = middle + delta;
-    double fullMinValue = middle - delta;
-    std::stringstream ss;
-    ss << fullMinValue + mouseY * (fullMaxValue - fullMinValue);
-    Print(ss.str(), mouseX + PixelsToWorldX(5), mouseY + PixelsToWorldY(5));
+    if (drawCursor)
+        RenderCursor(normBorderY);
 }
 
 void Renderer::Render()
@@ -89,6 +79,10 @@ void Renderer::KeyPressed(unsigned char key)
             CalculateMinMaxValues();
         }
     }
+    else if (key == '1')
+    {
+        drawCursor = !drawCursor;
+    }
     glutPostRedisplay();
 }
 
@@ -116,6 +110,22 @@ float Renderer::PixelsToWorldY(float y)
     return y / height;
 }
 
+void Renderer::RenderCursor(float normBorderY)
+{
+    DrawLine(mouseX, 0, mouseX, 1);
+    DrawLine(0, mouseY, 1, mouseY);
+
+    // print the price value next to the cursor
+    double diff = maxValue - minValue;
+    double middle = (maxValue + minValue) / 2;
+    double delta = diff * height / (height - 2 * normBorderY * height) / 2;
+    double fullMaxValue = middle + delta;
+    double fullMinValue = middle - delta;
+    std::stringstream ss;
+    ss << fullMinValue + mouseY * (fullMaxValue - fullMinValue);
+    Print(ss.str(), mouseX + PixelsToWorldX(5), mouseY + PixelsToWorldY(5));
+}
+
 void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 {
     int numLinesToDraw = width / 125;
@@ -137,7 +147,7 @@ void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 
 void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 {
-    int numLinesToDraw = height / 75;
+    int numLinesToDraw = 11;//height / 70;
 
     double diff = maxValue - minValue;
 
@@ -167,6 +177,12 @@ void Renderer::RenderData()
     glColor3f(0, 1, 0);
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
+        if (index - i >= reader->GetBarCount())
+            continue;
+
+        if (i > index)
+            break;
+
         double sample = reader->GetSampleAtIndex(index - i);
         float x = 1 - i / (float)numBarsToDraw;
         float y = (sample - minValue) / diff;
@@ -193,14 +209,23 @@ void Renderer::RenderActor(IFXIndicator *actor)
 
     int index = simulator->GetCurrentIndex();
 
+    float halfBoxWidth = PixelsToWorldX(2);
+    float halfBoxHeight = PixelsToWorldY(2);
+
     SetColor(actor->GetColor());
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
+        if (index - i >= reader->GetBarCount())
+            continue;
+
+        if (i > index)
+            break;
+
         double sample = actor->GetSampleAtIndex(index - i);
         float x = 1 - i / (float)numBarsToDraw;
         float y = (sample - minValue) / (maxValue - minValue);
 
-        if (i == 0)
+        if (lastPointX < 0)
         {
             lastPointX = x;
             lastPointY = y;
@@ -212,6 +237,8 @@ void Renderer::RenderActor(IFXIndicator *actor)
             lastPointX = x;
             lastPointY = y;
         }
+
+        DrawRectangle(x - halfBoxWidth, y - halfBoxHeight, x + halfBoxWidth, y + halfBoxHeight);
     }
 }
 
