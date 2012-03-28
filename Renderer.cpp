@@ -34,9 +34,18 @@ void Renderer::RenderBorders(float normBorderX, float normBorderY)
 
 void Renderer::Render()
 {
+    int index = simulator->GetCurrentIndex();
+
+    // data
     RenderData();
-    RenderActors(simulator->GetActors());
-    RenderObjects();
+    
+    // actors
+    std::vector<IFXActor *> actors = simulator->GetActors();
+    for (unsigned int i = 0; i < actors.size(); ++ i)
+        actors[i]->Render(index, numBarsToDraw, minValue, maxValue);
+
+    // objects
+    objectManager->RenderObjects(index, numBarsToDraw, minValue, maxValue);
 }
 
 void Renderer::KeyPressed(unsigned char key)
@@ -54,14 +63,18 @@ void Renderer::KeyPressed(unsigned char key)
     else if (key == ';')
     {
         if (simulator->GoToPreviousOrder())
+        {
             simulator->GoForwardNBars(numBarsToDraw / 2, numBarsToDraw);
-        CalculateMinMaxValues();
+            CalculateMinMaxValues();
+        }
     }
     else if (key == 'q')
     {
         if (simulator->GoToNextOrder())
+        {
             simulator->GoForwardNBars(numBarsToDraw / 2, numBarsToDraw);
-        CalculateMinMaxValues();
+            CalculateMinMaxValues();
+        }
     }
     else if (key == '-')
     {
@@ -98,16 +111,6 @@ void Renderer::SetDimensions(int _width, int _height)
 {
     width = _width;
     height = _height;
-}
-
-float Renderer::PixelsToWorldX(float x)
-{
-    return x / width;
-}
-
-float Renderer::PixelsToWorldY(float y)
-{
-    return y / height;
 }
 
 void Renderer::RenderCursor(float normBorderY)
@@ -147,7 +150,7 @@ void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 
 void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 {
-    int numLinesToDraw = 11;//height / 70;
+    int numLinesToDraw = height / 70;
 
     double diff = maxValue - minValue;
 
@@ -188,70 +191,6 @@ void Renderer::RenderData()
         float y = (sample - minValue) / diff;
         
         DrawRectangle(x - POINT_WIDTH / 2, y - POINT_HEIGHT, x + POINT_WIDTH / 2, y + POINT_HEIGHT);
-    }
-}
-
-void Renderer::RenderActors(std::vector<IFXActor *> actors)
-{
-    for (unsigned int i = 0; i < actors.size(); ++ i)
-    {
-        if (actors[i]->IsIndicator())
-            RenderActor((IFXIndicator *)actors[i]);
-        else if (actors[i]->IsTrader())
-            RenderActors(((TradingBot *)actors[i])->GetIndicators());
-    }
-}
-
-void Renderer::RenderActor(IFXIndicator *actor)
-{
-    float lastPointX = -1; 
-    float lastPointY = -1;
-
-    int index = simulator->GetCurrentIndex();
-
-    float halfBoxWidth = PixelsToWorldX(2);
-    float halfBoxHeight = PixelsToWorldY(2);
-
-    SetColor(actor->GetColor());
-    for (int i = 0; i < numBarsToDraw; ++ i)
-    {
-        if (index - i >= reader->GetBarCount())
-            continue;
-
-        if (i > index)
-            break;
-
-        double sample = actor->GetSampleAtIndex(index - i);
-        float x = 1 - i / (float)numBarsToDraw;
-        float y = (sample - minValue) / (maxValue - minValue);
-
-        if (lastPointX < 0)
-        {
-            lastPointX = x;
-            lastPointY = y;
-        }
-        else
-        {
-            DrawLine(x, y, lastPointX, lastPointY);
-
-            lastPointX = x;
-            lastPointY = y;
-        }
-
-        DrawRectangle(x - halfBoxWidth, y - halfBoxHeight, x + halfBoxWidth, y + halfBoxHeight);
-    }
-}
-
-void Renderer::RenderObjects()
-{
-    std::vector<Object *> objects = objectManager->GetObjects();
-
-    int index = simulator->GetCurrentIndex();
-
-    for (unsigned int i = 0; i < objects.size(); ++ i)
-    {
-        if (objects[i]->IsInScreen(index, numBarsToDraw))
-            objects[i]->Render(index, numBarsToDraw, minValue, maxValue);
     }
 }
 

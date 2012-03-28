@@ -14,4 +14,10 @@ void DrawCircleBorder(float x, float y, float radiusX, float radiusY, int step =
 
 void Print(std::string str, float x, float y);
 
+float PixelsToWorldX(int pixels);
+float PixelsToWorldY(int pixels);
+
+extern int width;
+extern int height;
+
 #endif

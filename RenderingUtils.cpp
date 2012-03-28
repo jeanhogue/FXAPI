@@ -1,9 +1,11 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "RenderingUtils.h"
-
 #pragma warning(disable:4505)     // remove local functions warning
 #include "glut.h"
+
+int width;
+int height;
 
 
 void DrawLine(float x1, float y1, float x2, float y2)
@@ -101,4 +103,14 @@ void Print(std::string str, float x, float y)
 
     for (std::string::iterator i = str.begin(); i != str.end(); ++ i)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *i);
+}
+
+float PixelsToWorldX(int x)
+{
+    return (float)x / width;
+}
+
+float PixelsToWorldY(int y)
+{
+    return (float)y / height;
 }

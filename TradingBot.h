@@ -17,6 +17,8 @@ public:
     void Buy(double price, int timeIndex);
     void Sell(double price, int timeIndex);
 
+    virtual void Render(int index, int numBarsToDraw, double minValue, double maxValue);
+
     virtual bool IsTrader() { return true; }
 
     std::vector<IFXActor *> GetIndicators() { return indicators; }

@@ -4,8 +4,6 @@
 #include "RenderingUtils.h"
 
 int win;
-int width;
-int height;
 float borderX = 60;
 float borderY = 40;
 Renderer *renderer;
@@ -13,7 +11,6 @@ Renderer *renderer;
 void disp();
 void keyb(unsigned char key, int x, int y);
 void motion(int x, int y);
-void mouse(int button, int state, int x, int y);
 void reshape(int w, int h);
 
 
@@ -33,7 +30,6 @@ void StartRendering(int argc, char **argv, Renderer *_renderer)
     glutDisplayFunc(disp);
     glutKeyboardFunc(keyb);
     glutPassiveMotionFunc(motion);
-    glutMouseFunc(mouse);
     glutReshapeFunc(reshape);
 
     glutSetCursor(GLUT_CURSOR_CROSSHAIR);
@@ -83,11 +79,6 @@ void keyb(unsigned char key, int x, int y)
 void motion(int x, int y)
 {
     renderer->OnMotion(x, y);
-}
-
-void mouse(int button, int state, int x, int y)
-{
-    int bla = 2;
 }
 
 void reshape(int w, int h)

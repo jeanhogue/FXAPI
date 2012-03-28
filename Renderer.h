@@ -24,16 +24,10 @@ public:
     void SetDimensions(int _width, int _height);
 
 private:
-    float PixelsToWorldX(float x);
-    float PixelsToWorldY(float y);
-
     void RenderCursor(float normBorderY);
     void RenderScalesX(float normBorderX, float normBorderY);
     void RenderScalesY(float normBorderX, float normBorderY);
     void RenderData();
-    void RenderActors(std::vector<IFXActor *> actors);
-    void RenderActor(IFXIndicator *actor);
-    void RenderObjects();
 
     void CalculateMinMaxValues();
 
@@ -44,9 +38,6 @@ private:
     int offsetFromLatestBar;
     int numBarsToDraw;
     double minValue, maxValue;
-
-    int width;
-    int height;
 
     bool drawCursor;
     float mouseX;

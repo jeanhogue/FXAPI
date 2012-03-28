@@ -13,6 +13,8 @@ public:
     virtual double GetValue() = 0;
     virtual double GetSampleAtIndex(int n);
 
+    virtual void Render(int index, int numBarsToDraw, double minValue, double maxValue);
+
     virtual double GetMinValueInRange(int start, int end);
     virtual double GetMaxValueInRange(int start, int end);
 

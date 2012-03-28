@@ -24,3 +24,9 @@ void TradingBot::Sell(double price, int timeIndex)
     capitalManager->AddOrder(CreateOrder(tSELL, timeIndex, lots, price, price - takeProfit, price + stopLosses));
     objectManager->AddObject(new OrderBar(timeIndex, price, price - takeProfit, price + stopLosses));
 }
+
+void TradingBot::Render(int index, int numBarsToDraw, double minValue, double maxValue)
+{
+    for (unsigned int i = 0; i < indicators.size(); ++ i)
+        indicators[i]->Render(index, numBarsToDraw, minValue, maxValue);
+}
