@@ -19,7 +19,7 @@ public:
     void Run();
     void RunOneBar();
 
-    void GoForwardNBars(int nBars);
+    void GoForwardNBars(int nBars, int numBarsToDraw);
     void GoBackNBars(int nBars);
 
     bool GoToPreviousOrder();

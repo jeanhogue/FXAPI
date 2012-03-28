@@ -53,7 +53,7 @@ void Renderer::KeyPressed(unsigned char key)
 {
     if (key == 'o')
     {
-        simulator->GoForwardNBars(5);
+        simulator->GoForwardNBars(5, numBarsToDraw);
         CalculateMinMaxValues();
     }
     else if (key == 'a')
@@ -64,13 +64,13 @@ void Renderer::KeyPressed(unsigned char key)
     else if (key == ';')
     {
         if (simulator->GoToPreviousOrder())
-            simulator->GoForwardNBars(numBarsToDraw / 2);
+            simulator->GoForwardNBars(numBarsToDraw / 2, numBarsToDraw);
         CalculateMinMaxValues();
     }
     else if (key == 'q')
     {
         if (simulator->GoToNextOrder())
-            simulator->GoForwardNBars(numBarsToDraw / 2);
+            simulator->GoForwardNBars(numBarsToDraw / 2, numBarsToDraw);
         CalculateMinMaxValues();
     }
     else if (key == '-')
@@ -118,6 +118,21 @@ float Renderer::PixelsToWorldY(float y)
 
 void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 {
+    int numLinesToDraw = width / 125;
+    int step = numBarsToDraw / numLinesToDraw;
+
+    float xOffset = PixelsToWorldX(3);
+
+    glColor3f(1, 1, 1);
+    for (int i = 0; i < numBarsToDraw; i += step)
+    {
+        float x = normBorderX + (1 - i / (float)numBarsToDraw) * (1 - 2 * normBorderX);
+        DrawLine(x, normBorderY, x, normBorderY * 2 / 3);
+
+        std::stringstream ss;
+        ss << simulator->GetCurrentIndex() - i;
+        Print(ss.str(), x + xOffset, 0.04f);
+    }
 }
 
 void Renderer::RenderScalesY(float normBorderX, float normBorderY)

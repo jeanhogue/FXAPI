@@ -24,6 +24,7 @@ public:
     virtual int GetTimeIndex() { return timeIndex; }
     virtual std::string GetStr() = 0;
 
+    int GetBarCount() { return (int)data.size(); }
     void PushDataSample(double sample);
 
 protected:

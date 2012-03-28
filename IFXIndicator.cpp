@@ -39,7 +39,5 @@ double IFXIndicator::GetMaxValueInRange(int start, int end)
 
 void IFXIndicator::SetColor(int r, int g, int b)
 {
-    color.r = r / 255.f;
-    color.g = g / 255.f;
-    color.b = b / 255.f;
+    color.SetColor(r, g, b);
 }

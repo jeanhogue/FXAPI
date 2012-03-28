@@ -38,9 +38,10 @@ void Simulator::RunOneBar()
     currentIndex ++;
 }
 
-void Simulator::GoForwardNBars(int nBars)
+void Simulator::GoForwardNBars(int nBars, int numBarsToDraw)
 {
-    currentIndex += nBars;
+    if (currentIndex - numBarsToDraw / 2 < reader->GetBarCount() - nBars)
+        currentIndex += nBars;
  }
 
 void Simulator::GoBackNBars(int nBars)
