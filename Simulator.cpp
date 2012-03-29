@@ -10,12 +10,17 @@ Simulator::Simulator(DataReader *_reader, std::vector<IFXActor *> _actors, Capit
 
 void Simulator::Init()
 {
+    capitalManager->SetFunds(10000);
+
     for (unsigned int i = 0; i < actors.size(); ++ i)
         actors[i]->Init();
+    reader->Init();
 }
 
 void Simulator::Run()
 {    
+    Init();
+
     do 
     {
         RunOneBar();
@@ -23,6 +28,7 @@ void Simulator::Run()
     while (!reader->EndOfData());
 
     capitalManager->CloseAllOrders();
+    capitalManager->PrintReport();
 
     currentOrder = capitalManager->GetNumOrders() - 1;
 }

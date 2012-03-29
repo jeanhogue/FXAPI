@@ -11,9 +11,10 @@ class DataReader
 public:
     DataReader(Timeframe _timeFrame) : timeFrame(_timeFrame) {}
 
+    virtual void Init() = 0;
+
     virtual double GetNextTick() = 0;
   
-    virtual bool IsValidReader() = 0;
     virtual bool EndOfData() = 0;
 
     virtual double GetSampleAtIndex(int n);
@@ -22,7 +23,6 @@ public:
     virtual double GetMaxValueInRange(int start, int end);
 
     virtual int GetTimeIndex() { return timeIndex; }
-    virtual std::string GetStr() = 0;
 
     int GetBarCount() { return (int)data.size(); }
     void PushDataSample(double sample);

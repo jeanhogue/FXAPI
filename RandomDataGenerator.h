@@ -9,12 +9,11 @@ class RandomDataGenerator : public DataReader
 public:
     RandomDataGenerator(double _startPrice, int _numBars);
 
+    virtual void Init();
+
     virtual double GetNextTick();
 
-    virtual bool IsValidReader() { return true; }
     virtual bool EndOfData();
-
-    virtual std::string GetStr() { return "Random Data Generator"; }
 
 private:
     double startPrice;

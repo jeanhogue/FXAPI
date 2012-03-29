@@ -10,12 +10,11 @@ class CSVReader : public DataReader
 public:
     CSVReader(std::string _filename, Timeframe timeFrame);
 
+    virtual void Init();
+
     virtual double GetNextTick();
 
-    virtual bool IsValidReader();
     virtual bool EndOfData();
-
-    virtual std::string GetStr();
 
 private:
     std::ifstream in;

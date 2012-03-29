@@ -8,9 +8,9 @@
 TradingBot::TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectManager)
 : capitalManager(_capitalManager), objectManager(_objectManager)
 {
-    takeProfit = PipsToPrice(50);
-    stopLosses = PipsToPrice(20);
-    lots = 0.1;
+    takeProfit = AddTradingParameter("Take Profit", PipsToPrice(20), PipsToPrice(100), PipsToPrice(10));
+    stopLosses = AddTradingParameter("Stop Losses", PipsToPrice(5), PipsToPrice(50), PipsToPrice(10));
+    lots = AddTradingParameter("Lots", 0.05, 0.5, 0.1);
 }
 
 TradingBot::~TradingBot()
@@ -22,14 +22,14 @@ TradingBot::~TradingBot()
 
 void TradingBot::Buy(double price, int timeIndex)
 {
-    capitalManager->AddOrder(CreateOrder(tBUY, timeIndex, lots, price, price + takeProfit, price - stopLosses));
-    objectManager->AddObject(new OrderBar(timeIndex, price, price + takeProfit, price - stopLosses));
+    capitalManager->AddOrder(CreateOrder(tBUY, timeIndex, lots->GetCurrentValue(), price, price + takeProfit->GetCurrentValue(), price - stopLosses->GetCurrentValue()));
+    objectManager->AddObject(new OrderBar(timeIndex, price, price + takeProfit->GetCurrentValue(), price - stopLosses->GetCurrentValue()));
 }
 
 void TradingBot::Sell(double price, int timeIndex)
 {
-    capitalManager->AddOrder(CreateOrder(tSELL, timeIndex, lots, price, price - takeProfit, price + stopLosses));
-    objectManager->AddObject(new OrderBar(timeIndex, price, price - takeProfit, price + stopLosses));
+    capitalManager->AddOrder(CreateOrder(tSELL, timeIndex, lots->GetCurrentValue(), price, price - takeProfit->GetCurrentValue(), price + stopLosses->GetCurrentValue()));
+    objectManager->AddObject(new OrderBar(timeIndex, price, price - takeProfit->GetCurrentValue(), price + stopLosses->GetCurrentValue()));
 }
 
 void TradingBot::Render(int index, int numBarsToDraw, double minValue, double maxValue)

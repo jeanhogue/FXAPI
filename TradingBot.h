@@ -3,13 +3,14 @@
 
 #include <vector>
 #include "IFXActor.h"
+#include "TradingParameter.h"
 #include "IFXIndicator.h"
 #include "CapitalManager.h"
 
 
 class ObjectManager;
 
-class TradingBot : public IFXActor
+class TradingBot : public IFXActor, public Optimizable
 {
 public:
     TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectManager);
@@ -28,9 +29,9 @@ protected:
     CapitalManager *capitalManager;
     ObjectManager *objectManager;
 
-    double takeProfit;
-    double stopLosses;
-    double lots;
+    TradingParameter *takeProfit;
+    TradingParameter *stopLosses;
+    TradingParameter *lots;
 
     std::vector<IFXActor *> indicators;
 };

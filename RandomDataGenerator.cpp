@@ -6,7 +6,11 @@
 RandomDataGenerator::RandomDataGenerator(double _startPrice, int _numBars)
 : DataReader(t1H), startPrice(_startPrice), range(_startPrice * 0.02), numBars(_numBars)
 {
-    //srand(time(NULL));
+}
+
+void RandomDataGenerator::Init()
+{
+    srand(1337);
     lastSample = 1;     // start value
 }
 

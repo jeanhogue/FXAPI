@@ -5,6 +5,13 @@
 CSVReader::CSVReader(std::string _filename, Timeframe timeFrame)
 : DataReader(timeFrame), filename(_filename)
 {
+}
+
+void CSVReader::Init()
+{
+    if (in.is_open())
+        in.close();
+
     in.open(filename.c_str());
     assert(in.is_open());
 
@@ -42,17 +49,7 @@ double CSVReader::GetNextTick()
     return sample;
 }
 
-bool CSVReader::IsValidReader()
-{
-    return in.is_open();
-}
-
 bool CSVReader::EndOfData()
 {
     return in.eof();
-}
-
-std::string CSVReader::GetStr()
-{
-    return filename;
 }
