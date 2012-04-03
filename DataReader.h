@@ -12,6 +12,7 @@ public:
     DataReader(Timeframe _timeFrame) : timeFrame(_timeFrame) {}
 
     virtual void Init() = 0;
+    virtual void Cleanup() { data.clear(); }
 
     virtual double GetNextTick() = 0;
   

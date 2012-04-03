@@ -12,34 +12,41 @@ void Simulator::Init()
 {
     capitalManager->SetFunds(10000);
 
+    reader->Init();
     for (unsigned int i = 0; i < actors.size(); ++ i)
         actors[i]->Init();
-    reader->Init();
 }
 
 void Simulator::Run()
 {    
-    Init();
-
     do 
     {
         RunOneBar();
     }
     while (!reader->EndOfData());
 
-    capitalManager->CloseAllOrders();
+    capitalManager->CloseAllOrders(currentSample);
     capitalManager->PrintReport();
 
     currentOrder = capitalManager->GetNumOrders() - 1;
 }
 
+void Simulator::Cleanup()
+{
+    reader->Cleanup();
+    for (unsigned int i = 0; i < actors.size(); ++ i)
+        actors[i]->Cleanup();
+    capitalManager->Cleanup();
+}
+
 void Simulator::RunOneBar()
 {
     currentSample = reader->GetNextTick();
-    for (unsigned int i = 0; i < actors.size(); ++ i)
-        actors[i]->OnNewBar(currentSample, currentIndex);
 
     capitalManager->OnNewBar(currentSample, currentIndex);
+
+    for (unsigned int i = 0; i < actors.size(); ++ i)
+        actors[i]->OnNewBar(currentSample, currentIndex);
 
     currentIndex ++;
 }

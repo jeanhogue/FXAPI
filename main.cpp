@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include "CapitalManager.h"
 #include "DataReader.h"
 #include "CSVReader.h"
@@ -17,6 +18,8 @@ std::vector<IFXActor *> loadedActors;
 Optimizable *FindOptimizable(std::vector<IFXActor *> actors);
 void Cleanup();
 
+bool OPTIMIZE = false;
+
 
 int main(int argc, char **argv)
 {
@@ -25,9 +28,10 @@ int main(int argc, char **argv)
     CapitalManager capitalManager;
 
     ObjectManager objectManager;
+    double bestReturn = 0;
 
     //DataReader *reader = new CSVReader("Data/Q1_3600_1000.csv", t1H);
-    RandomDataGenerator reader(1.20, 150);
+    RandomDataGenerator reader(1.20, 10000, 1337);
 
     //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
     loadedActors.push_back(new MATrader(&capitalManager, &objectManager));
@@ -37,19 +41,38 @@ int main(int argc, char **argv)
 
     Optimizable *optimizable = FindOptimizable(loadedActors);
 
-    if (optimizable)
+    if (OPTIMIZE && optimizable)
     {
         while (optimizable->HasMoreParamsToTry())
         {
             optimizable->PrintParameters();
+
+            simulator.Init();
             simulator.Run();
+            if (capitalManager.GetFunds() > bestReturn)
+            {
+                optimizable->SaveParameters();
+                bestReturn = capitalManager.GetFunds();
+            }
             optimizable->UpdateParameters();
+
+            simulator.Cleanup();
         }
+
+        std::cout << std::endl << std::endl << std::endl;
+        std::cout << " *** Best Parameters *** " << std::endl << std::endl;
+        optimizable->SetBestParams();
+        optimizable->PrintParameters();
+        simulator.Init();
+        simulator.Run();
+
+        std::cout << std::endl;
 
         system("PAUSE");            
     }
     else
     {
+        simulator.Init();
         simulator.Run();
 
         Renderer renderer(&simulator, &objectManager);

@@ -50,7 +50,7 @@ void MATrader::OnNewBar(double sample, int timeIndex)
 
 int MATrader::GetState()
 {
-    if (fastMA->GetValue() >= slowMA->GetValue())
+    if (fastMA->GetCurrentValue() >= slowMA->GetCurrentValue())
         return 1;
     return -1;
 }

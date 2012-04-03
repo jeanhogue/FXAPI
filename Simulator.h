@@ -19,6 +19,8 @@ public:
     void Run();
     void RunOneBar();
 
+    void Cleanup();
+
     void GoForwardNBars(int nBars, int numBarsToDraw);
     void GoBackNBars(int nBars);
 

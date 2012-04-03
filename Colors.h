@@ -17,14 +17,12 @@ public:
         b = _b / 255.0f;
     }
 
+    void SetOGLColor()
+    {
+        glColor3f(r, g, b);
+    }
+
     float r, g, b;
 };
-
-
-static void SetColor(Color color)
-{
-    glColor3f(color.r, color.g, color.b);
-}
-
 
 #endif

@@ -7,6 +7,18 @@ CapitalManager::CapitalManager()
 {
 }
 
+void CapitalManager::Cleanup()
+{
+    for (unsigned int i = 0; i < orders.size(); ++ i)
+        delete orders[i];
+    orders.clear();
+}
+
+double CapitalManager::GetFunds() 
+{ 
+    return currentBalance; 
+}
+
 void CapitalManager::SetFunds(double balance)
 {
     startBalance = balance;
@@ -21,20 +33,47 @@ void CapitalManager::SetLeverage(double _leverage)
 void CapitalManager::AddOrder(Order *newOrder)
 {
     orders.push_back(newOrder);
+
+    if (orders.size() == 154)
+    {
+        int bla = 2;
+    }
+}
+
+int CapitalManager::GetNumPositiveOrders()
+{
+    int count = 0;
+    for (size_t i = 0; i < orders.size(); ++ i)
+    {
+        if (orders[i]->IsGain())
+            count ++;
+    }
+    return count;
+}
+
+int CapitalManager::GetNumNegativeOrders()
+{
+    int count = 0;
+    for (size_t i = 0; i < orders.size(); ++ i)
+    {
+        if (!orders[i]->IsGain())
+            count ++;
+    }
+    return count;
 }
 
 int CapitalManager::GetNumOrders()
 {
-    return orders.size();
+    return (int)orders.size();
 }
 
-void CapitalManager::CloseAllOrders()
+void CapitalManager::CloseAllOrders(double sample)
 {
     for (size_t i = 0; i < orders.size(); ++ i)
     {
         if (orders[i]->IsActive())
         {
-            orders[i]->CloseOrder();
+            orders[i]->CloseOrder(sample);
             currentBalance += orders[i]->GetProfits();
         }
     }
@@ -72,6 +111,5 @@ bool CapitalManager::NoOpenedOrders()
 void CapitalManager::PrintReport()
 {
     std::cout << "Start balance = " << startBalance << ", End Balance = " << currentBalance << ", Profits = " << (currentBalance - startBalance) / startBalance  * 100 << "%" << std::endl;
-    std::cout << "Number orders = " << orders.size() << std::endl;
-    std::cout << "Number bars = " << barCount << std::endl;
+    std::cout << "Orders (Gain, Loss, Total) = " << GetNumPositiveOrders() << ", " << GetNumNegativeOrders() << ", " << GetNumOrders() << std::endl;
 }

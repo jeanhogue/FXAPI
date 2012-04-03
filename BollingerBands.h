@@ -17,8 +17,6 @@ public:
 
     virtual void Render(int index, int numBarsToDraw, double minValue, double maxValue);
 
-    virtual double GetValue();
-
 private:
     MovingAverage *movingAverage;
 

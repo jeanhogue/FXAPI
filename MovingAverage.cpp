@@ -4,39 +4,49 @@
 
 
 MovingAverage::MovingAverage(int _period)
-: period(_period), buffer(0)
+: period(_period)
 {
     assert(period > 0 && period < 10000);
 }
 
-MovingAverage::~MovingAverage()
+SMA::SMA(int period) : MovingAverage(period), buffer(0)
+{}
+
+SMA::~SMA()
 {
     if (buffer)
         delete [] buffer;
 }
 
-void MovingAverage::Init()
+void SMA::Init()
 {
     buffer = new double[period];
     memset(buffer, 0, sizeof(double) * period);
     bufferIndex = 0;
+    firstSample = true;
 }
 
-void MovingAverage::OnNewBar(double sample, int timeIndex)
+void SMA::OnNewBar(double sample, int timeIndex)
 {
-    buffer[bufferIndex] = sample;
+    if (firstSample)
+    {
+        for (int i = 0; i < period; ++ i)
+            buffer[i] = sample;
+        firstSample = false;
+    }
+    else
+    {
+        buffer[bufferIndex] = sample;
+    }
+
     bufferIndex ++;
     if (bufferIndex >= period)
         bufferIndex = 0;
 
-    values.push_back(GetValue());
+    values.push_back(GetMAValue());
 }
 
-
-SMA::SMA(int period) : MovingAverage(period) 
-{}
-
-double SMA::GetValue()
+double SMA::GetMAValue()
 {
     double sum = 0;
     for (int i = 0; i < period; ++ i)
@@ -49,15 +59,27 @@ EMA::EMA(int period)
 : MovingAverage(period), lastValue(0), a(2. / (period + 1)), oneMinusA(1 - a) 
 {}
 
-double EMA::GetValue()
+void EMA::Init()
 {
-    double mostRecentBar = 0;
-    if (bufferIndex > 0)
-        mostRecentBar = buffer[bufferIndex - 1];
-    else
-        mostRecentBar = buffer[period - 1];
+    firstSample = true;
+}
 
-    double newValue = a * mostRecentBar + oneMinusA * lastValue;
+void EMA::OnNewBar(double _sample, int timeIndex)
+{
+    if (firstSample)
+    {
+        lastValue = _sample;
+        firstSample = false;
+    }
+    
+    sample = _sample;
+
+    values.push_back(GetMAValue());
+}
+
+double EMA::GetMAValue()
+{
+    double newValue = a * sample + oneMinusA * lastValue;
     lastValue = newValue;
     return newValue;
 }

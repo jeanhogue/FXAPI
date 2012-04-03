@@ -3,6 +3,13 @@
 #include "RenderingUtils.h"
 
 
+double IFXIndicator::GetCurrentValue()
+{
+    if (values.empty())
+        return -1;
+    return values[values.size() - 1];
+}
+
 double IFXIndicator::GetSampleAtIndex(int n)
 {
     if (n >= (int)values.size())
@@ -18,7 +25,7 @@ void IFXIndicator::Render(int index, int numBarsToDraw, double minValue, double 
     float halfBoxWidth = PixelsToWorldX(2);
     float halfBoxHeight = PixelsToWorldY(2);
 
-    ::SetColor(color);
+    color.SetOGLColor();
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
         if (i > index)

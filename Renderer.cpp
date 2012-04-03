@@ -29,7 +29,7 @@ void Renderer::RenderBorders(float normBorderX, float normBorderY)
     DrawRectangleBorder(normBorderX, normBorderY, 1 - normBorderX, 1 - normBorderY);
 
     if (drawCursor)
-        RenderCursor(normBorderY);
+        RenderCursor(normBorderX, normBorderY);
 }
 
 void Renderer::Render()
@@ -113,10 +113,11 @@ void Renderer::SetDimensions(int _width, int _height)
     height = _height;
 }
 
-void Renderer::RenderCursor(float normBorderY)
+void Renderer::RenderCursor(float normBorderX, float normBorderY)
 {
-    DrawLine(mouseX, 0, mouseX, 1);
-    DrawLine(0, mouseY, 1, mouseY);
+    glColor3f(0.6f, 0.6f, 0.6f);
+    DrawLine(mouseX, normBorderY, mouseX, 1 - normBorderY);
+    DrawLine(normBorderX, mouseY, 1 - normBorderX, mouseY);
 
     // print the price value next to the cursor
     double diff = maxValue - minValue;
@@ -131,8 +132,10 @@ void Renderer::RenderCursor(float normBorderY)
 
 void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 {
-    int numLinesToDraw = width / 125;
+    int numLinesToDraw = width / 60;
     int step = numBarsToDraw / numLinesToDraw;
+    if (step <= 0)
+        step = 1;
 
     float xOffset = PixelsToWorldX(3);
 

@@ -225,14 +225,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\MATrader.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\MATrader.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Order.cpp"
 					>
 				</File>
@@ -257,6 +249,18 @@
 					</File>
 					<File
 						RelativePath=".\TradingParameter.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Traders"
+					>
+					<File
+						RelativePath=".\MATrader.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\MATrader.h"
 						>
 					</File>
 				</Filter>

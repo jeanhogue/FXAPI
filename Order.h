@@ -2,6 +2,8 @@
 #define __Order_H__
 
 
+class OrderBar;
+
 class Order
 {
 public:
@@ -10,10 +12,13 @@ public:
     virtual void OnNewBar(double sample) = 0;
 
     virtual double GetProfits() = 0;
+    bool IsGain() { return GetProfits() > 0; }
+
+    void SetOrderBar(OrderBar *_bar);
 
     int GetTimeIndex() { return timeIndex; }
     bool IsActive() { return active; }
-    void CloseOrder() { active = false; }
+    void CloseOrder(double sample);
 
 protected:
     int timeIndex;
@@ -30,6 +35,8 @@ protected:
     int closeBarIndex;
 
     bool active;
+
+    OrderBar *bar;
 };
 
 

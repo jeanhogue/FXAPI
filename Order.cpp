@@ -1,10 +1,22 @@
 #include <cassert>
 #include "Order.h"
+#include "Object.h"
 
 
 Order::Order(int _timeIndex, double _volume, double price, double _takeProfits, double _stopLoss)
 : timeIndex(_timeIndex), volume(_volume), openPrice(price), takeProfits(_takeProfits), stopLoss(_stopLoss), active(true)
 {
+}
+
+void Order::SetOrderBar(OrderBar *_bar) 
+{ 
+    bar = _bar; 
+}
+
+void Order::CloseOrder(double sample)
+{
+    closePrice = sample;
+    active = false; 
 }
 
 
@@ -20,6 +32,11 @@ void BuyOrder::OnNewBar(double sample)
     {
         closePrice = sample;
         active = false;
+
+        if (closePrice > openPrice)
+            bar->SetColor(0, 255, 0);
+        else
+            bar->SetColor(255, 0, 0);
     }
 }
 
@@ -45,10 +62,15 @@ SellOrder::SellOrder(int timeIndex, double volume, double price, double takeProf
 void SellOrder::OnNewBar(double sample)
 {
     // check if we reached take profit or stop loss values
-    if (sample >= takeProfits || sample <= stopLoss)
+    if (sample <= takeProfits || sample >= stopLoss)
     {
         closePrice = sample;
         active = false;
+
+        if (closePrice < openPrice)
+            bar->SetColor(0, 255, 0);
+        else
+            bar->SetColor(255, 0, 0);
     }
 }
 

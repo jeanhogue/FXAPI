@@ -39,7 +39,7 @@ void BollingerBands::OnNewBar(double sample, int timeIndex)
         buffer[i - 1] = buffer[i];
     buffer[period - 1] = sample;
 
-    values.push_back(GetValue());
+    values.push_back(movingAverage->GetCurrentValue());
 
     // Upper BB = MA + D * sqrt(sum(yi - MA)^2 / n)
     // Lower BB = MA - D * sqrt(sum(yi - MA)^2 / n)
@@ -64,7 +64,7 @@ void BollingerBands::Render(int index, int numBarsToDraw, double minValue, doubl
     float halfBoxWidth = PixelsToWorldX(2);
     float halfBoxHeight = PixelsToWorldY(2);
 
-    ::SetColor(color);
+    color.SetOGLColor();
     for (int i = 0; i < numBarsToDraw; ++ i)
     {
         if (i > index)
@@ -98,9 +98,4 @@ void BollingerBands::Render(int index, int numBarsToDraw, double minValue, doubl
         DrawRectangle(x - halfBoxWidth, y1 - halfBoxHeight, x + halfBoxWidth, y1 + halfBoxHeight);
         DrawRectangle(x - halfBoxWidth, y2 - halfBoxHeight, x + halfBoxWidth, y2 + halfBoxHeight);
     }
-}
-
-double BollingerBands::GetValue()
-{
-    return movingAverage->GetValue();
 }

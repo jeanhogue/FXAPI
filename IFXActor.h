@@ -6,6 +6,7 @@ class IFXActor
 {
 public:
     virtual void Init() = 0;
+    virtual void Cleanup() {}
     virtual void OnNewBar(double sample, int timeIndex) = 0;
 
     virtual void Render(int index, int numBarsToDraw, double minValue, double maxValue) = 0;

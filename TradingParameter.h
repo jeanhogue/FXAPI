@@ -13,6 +13,8 @@ public:
 
     double GetCurrentValue() { return currentValue; }
 
+    void SaveParam();
+    void SetBestParam();
     void Print();
 
 private:
@@ -21,6 +23,7 @@ private:
     double endValue;
     double step;
     double currentValue;
+    double bestValue;       // value that gives best return
 };
 
 
@@ -32,6 +35,8 @@ public:
 
     TradingParameter *AddTradingParameter(std::string name, double startValue, double endValue, double step);
 
+    void SaveParameters();
+    void SetBestParams();
     void PrintParameters();
 
     bool HasMoreParamsToTry();

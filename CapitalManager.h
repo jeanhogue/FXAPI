@@ -10,12 +10,19 @@ class CapitalManager
 public:
     CapitalManager();
 
+    void Cleanup();
+
+    double GetFunds();
     void SetFunds(double balance);
     void SetLeverage(double _leverage);
 
     void AddOrder(Order *newOrder);
+    
+    int GetNumPositiveOrders();
+    int GetNumNegativeOrders();
     int GetNumOrders();
-    void CloseAllOrders();
+    
+    void CloseAllOrders(double sample);
     Order *GetOrder(int index) { return orders[index]; }
 
     void OnNewBar(double sample, int timeIndex);

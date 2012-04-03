@@ -15,8 +15,6 @@ public:
     virtual void Init() { decoree->Init(); }
     virtual void OnNewBar(double sample, int timeIndex);
 
-    virtual double GetValue() { return decoree->GetValue(); }
-
 private:
     IFXIndicator *decoree;
     std::ofstream out;

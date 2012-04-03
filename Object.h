@@ -2,6 +2,7 @@
 #define __Object_H__
 
 #include <string>
+#include "Colors.h"
 
 
 class Object
@@ -11,11 +12,15 @@ public:
 
     virtual void Render(int latestBarIndex, int numBarsToDraw, double minValue, double maxValue) = 0;
 
+    void SetColor(int r, int g, int b) { color.SetColor(r, g, b); }
+
     bool IsInScreen(int latestBarIndex, int numBarsToDraw);
 
 protected:
     int timeIndex;
     double price;
+
+    Color color;
 };
 
 

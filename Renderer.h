@@ -24,7 +24,7 @@ public:
     void SetDimensions(int _width, int _height);
 
 private:
-    void RenderCursor(float normBorderY);
+    void RenderCursor(float normBorderX, float normBorderY);
     void RenderScalesX(float normBorderX, float normBorderY);
     void RenderScalesY(float normBorderX, float normBorderY);
     void RenderData();

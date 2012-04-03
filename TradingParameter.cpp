@@ -4,8 +4,18 @@
 
 
 TradingParameter::TradingParameter(std::string _name, double _startValue, double _endValue, double _step)
-: name(_name), startValue(_startValue), endValue(_endValue), step(_step), currentValue(_startValue)
+: name(_name), startValue(_startValue), endValue(_endValue), step(_step), currentValue(_startValue), bestValue(startValue)
 {
+}
+
+void TradingParameter::SaveParam()
+{
+    bestValue = currentValue;
+}
+
+void TradingParameter::SetBestParam()
+{
+    currentValue = bestValue;
 }
 
 void TradingParameter::Print()
@@ -32,6 +42,18 @@ TradingParameter *Optimizable::AddTradingParameter(std::string name, double star
     return param;
 }
 
+void Optimizable::SaveParameters()
+{
+    for (unsigned int i = 0; i < parameters.size(); ++ i)
+        parameters[i]->SaveParam();
+}
+
+void Optimizable::SetBestParams()
+{
+    for (unsigned int i = 0; i < parameters.size(); ++ i)
+        parameters[i]->SetBestParam();
+}
+
 void Optimizable::PrintParameters()
 {
     std::cout << "#" << runCount << ": ";
@@ -43,7 +65,7 @@ void Optimizable::PrintParameters()
 bool Optimizable::HasMoreParamsToTry()
 {
     TradingParameter *lastParam = parameters[parameters.size() - 1];
-    return lastParam->GetCurrentValue() + lastParam->step < lastParam->endValue;
+    return lastParam->GetCurrentValue() < lastParam->endValue;
 }
 
 void Optimizable::UpdateParameters()
@@ -56,6 +78,10 @@ void Optimizable::UpdateParameters()
         param->currentValue += param->step;
         // most common case, we just increment the parameter value with the step
         if (param->currentValue < param->endValue)
+            break;
+
+        // no more parameters to use
+        if (index == parameters.size() - 1)
             break;
 
         // if parameter n when across the end value, we reset it to start value and increment the next parameter

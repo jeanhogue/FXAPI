@@ -7,7 +7,7 @@
 class RandomDataGenerator : public DataReader
 {
 public:
-    RandomDataGenerator(double _startPrice, int _numBars);
+    RandomDataGenerator(double _startPrice, int _numBars, int _seed);
 
     virtual void Init();
 
@@ -17,9 +17,9 @@ public:
 
 private:
     double startPrice;
-    double range;
-    int numBars;
     double lastSample;
+    int numBars;
+    int seed;
 };
 
 

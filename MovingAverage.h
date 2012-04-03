@@ -8,15 +8,11 @@ class MovingAverage : public IFXIndicator
 {
 public:
     MovingAverage(int _period);
-    ~MovingAverage();
-
-    virtual void Init();
-    virtual void OnNewBar(double sample, int timeIndex);
+    virtual ~MovingAverage() {}
 
 protected:
     int period;
-    double *buffer;
-    int bufferIndex;
+    bool firstSample;
 };
 
 
@@ -24,8 +20,17 @@ class SMA : public MovingAverage
 {
 public:
     SMA(int period);
+    ~SMA();
 
-    virtual double GetValue();
+    virtual void Init();
+    virtual void OnNewBar(double sample, int timeIndex);
+
+protected:
+    virtual double GetMAValue();
+
+private:
+    double *buffer;
+    int bufferIndex;
 };
 
 
@@ -34,11 +39,16 @@ class EMA : public MovingAverage
 public:
     EMA(int period);
 
-    virtual double GetValue();
+    virtual void Init();
+    virtual void OnNewBar(double sample, int timeIndex);
+
+protected:
+    virtual double GetMAValue();
 
 private:
     double a;               // a constant in the EMA formula
     double oneMinusA;       // (1 - a)
+    double sample;
     double lastValue;
 };
 

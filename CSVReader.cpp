@@ -9,13 +9,18 @@ CSVReader::CSVReader(std::string _filename, Timeframe timeFrame)
 
 void CSVReader::Init()
 {
-    if (in.is_open())
-        in.close();
-
     in.open(filename.c_str());
     assert(in.is_open());
 
     in.getline(buffer, 256);   // read the header
+}
+
+void CSVReader::Cleanup()
+{
+    DataReader::Cleanup();
+
+    if (in.is_open())
+        in.close();
 }
 
 double CSVReader::GetNextTick()
