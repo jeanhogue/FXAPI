@@ -20,7 +20,10 @@ void CSVReader::Cleanup()
     DataReader::Cleanup();
 
     if (in.is_open())
+    {
         in.close();
+        in.clear();
+    }
 }
 
 double CSVReader::GetNextTick()

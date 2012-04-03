@@ -8,9 +8,13 @@
 TradingBot::TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectManager)
 : capitalManager(_capitalManager), objectManager(_objectManager)
 {
-    takeProfit = AddTradingParameter("Take Profit", PipsToPrice(20), PipsToPrice(100), PipsToPrice(10));
+    /*takeProfit = AddTradingParameter("Take Profit", PipsToPrice(20), PipsToPrice(100), PipsToPrice(10));
     stopLosses = AddTradingParameter("Stop Losses", PipsToPrice(15), PipsToPrice(50), PipsToPrice(10));
-    lots = AddTradingParameter("Lots", 0.05, 0.5, 0.1);
+    lots = AddTradingParameter("Lots", 0.05, 0.5, 0.1);*/
+
+    takeProfit = AddTradingParameter("Take Profit", PipsToPrice(60), PipsToPrice(100), PipsToPrice(10));
+    stopLosses = AddTradingParameter("Stop Losses", PipsToPrice(45), PipsToPrice(50), PipsToPrice(10));
+    lots = AddTradingParameter("Lots", 0.45, 0.5, 0.1);
 }
 
 TradingBot::~TradingBot()

@@ -96,6 +96,7 @@ void Renderer::KeyPressed(unsigned char key)
     {
         drawCursor = !drawCursor;
     }
+
     glutPostRedisplay();
 }
 
@@ -132,7 +133,7 @@ void Renderer::RenderCursor(float normBorderX, float normBorderY)
 
 void Renderer::RenderScalesX(float normBorderX, float normBorderY)
 {
-    int numLinesToDraw = width / 60;
+    int numLinesToDraw = width / 120;
     int step = numBarsToDraw / numLinesToDraw;
     if (step <= 0)
         step = 1;
@@ -172,7 +173,7 @@ void Renderer::RenderScalesY(float normBorderX, float normBorderY)
 
 void Renderer::RenderData()
 {
-    float SPACE_BETWEEN_BARS = PixelsToWorldX(3);
+    float SPACE_BETWEEN_BARS = PixelsToWorldX(2);
     float POINT_WIDTH = PixelsToWorldX((float)width / numBarsToDraw) - SPACE_BETWEEN_BARS;
     float POINT_HEIGHT = PixelsToWorldY(5);
 

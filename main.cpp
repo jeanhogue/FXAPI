@@ -30,8 +30,8 @@ int main(int argc, char **argv)
     ObjectManager objectManager;
     double bestReturn = 0;
 
-    //DataReader *reader = new CSVReader("Data/Q1_3600_1000.csv", t1H);
-    RandomDataGenerator reader(1.20, 10000, 1337);
+    CSVReader reader("Data/Q4_1D_500.csv", t1D);
+    //RandomDataGenerator reader(1.20, 10000, 1337);
 
     //loadedActors.push_back(new OutputIndicatorDecorator(CreateMA(tSMA, 3), "MA_test.txt"));
     loadedActors.push_back(new MATrader(&capitalManager, &objectManager));
