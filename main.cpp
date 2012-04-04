@@ -78,7 +78,7 @@ int main(int argc, char **argv)
         Renderer renderer(&simulator, &objectManager);
         StartRendering(argc, argv, &renderer);
     }
-        
+
     return 0;
 }
 

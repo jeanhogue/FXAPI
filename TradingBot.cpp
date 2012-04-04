@@ -2,6 +2,7 @@
 #include "Order.h"
 #include "ObjectManager.h"
 #include "Object.h"
+#include "PercentLots.h"
 #include "Defs.h"
 
 
@@ -14,7 +15,9 @@ TradingBot::TradingBot(CapitalManager *_capitalManager, ObjectManager *_objectMa
 
     takeProfit = AddTradingParameter("Take Profit", PipsToPrice(60), PipsToPrice(100), PipsToPrice(10));
     stopLosses = AddTradingParameter("Stop Losses", PipsToPrice(45), PipsToPrice(50), PipsToPrice(10));
-    lots = AddTradingParameter("Lots", 0.45, 0.5, 0.1);
+    
+    lots = AddLotsParameter("Lots", 0.05, 0.5, 0.1);
+    //lots = new PercentLots(0.01);
 }
 
 TradingBot::~TradingBot()
@@ -27,14 +30,21 @@ void TradingBot::Cleanup()
     for (unsigned int i = 0; i < indicators.size(); ++ i)
         delete indicators[i];
     indicators.clear();
+
+    if (dynamic_cast<PercentLots *>(lots))
+        delete lots;
 }
 
 void TradingBot::Buy(double price, int timeIndex)
 {
-    Order *order = CreateOrder(tBUY, timeIndex, lots->GetCurrentValue(), price, price + takeProfit->GetCurrentValue(), price - stopLosses->GetCurrentValue());
+    double dLots = lots->GetCurrentValue(capitalManager->GetFunds(), PriceToPips(stopLosses->GetCurrentValue()), price);
+    double dTakeProfit = price + takeProfit->GetCurrentValue();
+    double dStopLosses = price - stopLosses->GetCurrentValue();
+
+    Order *order = CreateOrder(tBUY, timeIndex, dLots, price, dTakeProfit, dStopLosses);
     capitalManager->AddOrder(order);
 
-    OrderBar *bar = new OrderBar(timeIndex, price, price + takeProfit->GetCurrentValue(), price - stopLosses->GetCurrentValue());
+    OrderBar *bar = new OrderBar(timeIndex, price, dTakeProfit, dStopLosses);
     objectManager->AddObject(bar);
 
     order->SetOrderBar(bar);
@@ -42,10 +52,14 @@ void TradingBot::Buy(double price, int timeIndex)
 
 void TradingBot::Sell(double price, int timeIndex)
 {
-    Order *order = CreateOrder(tSELL, timeIndex, lots->GetCurrentValue(), price, price - takeProfit->GetCurrentValue(), price + stopLosses->GetCurrentValue());
+    double dLots = lots->GetCurrentValue(capitalManager->GetFunds(), PriceToPips(stopLosses->GetCurrentValue()), price);
+    double dTakeProfit = price - takeProfit->GetCurrentValue();
+    double dStopLosses = price + stopLosses->GetCurrentValue();
+
+    Order *order = CreateOrder(tSELL, timeIndex, dLots, price, dTakeProfit, dStopLosses);
     capitalManager->AddOrder(order);
 
-    OrderBar *bar = new OrderBar(timeIndex, price, price - takeProfit->GetCurrentValue(), price + stopLosses->GetCurrentValue());
+    OrderBar *bar = new OrderBar(timeIndex, price, dTakeProfit, dStopLosses);
     objectManager->AddObject(bar);
 
     order->SetOrderBar(bar);

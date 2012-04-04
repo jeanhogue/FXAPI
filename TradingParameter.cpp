@@ -24,6 +24,12 @@ void TradingParameter::Print()
 }
 
 
+LotsParameter::LotsParameter(std::string name, double startValue, double endValue, double step)
+: TradingParameter(name, startValue, endValue, step)
+{
+}
+
+
 Optimizable::Optimizable()
 : runCount(1)
 {
@@ -38,6 +44,13 @@ Optimizable::~Optimizable()
 TradingParameter *Optimizable::AddTradingParameter(std::string name, double startValue, double endValue, double step)
 {
     TradingParameter *param = new TradingParameter(name, startValue, endValue, step);
+    parameters.push_back(param);
+    return param;
+}
+
+LotsParameter *Optimizable::AddLotsParameter(std::string name, double startValue, double endValue, double step)
+{
+    LotsParameter *param = new LotsParameter(name, startValue, endValue, step);
     parameters.push_back(param);
     return param;
 }

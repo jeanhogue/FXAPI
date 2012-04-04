@@ -31,7 +31,7 @@ protected:
 
     TradingParameter *takeProfit;
     TradingParameter *stopLosses;
-    TradingParameter *lots;
+    LotsParameter *lots;
 
     std::vector<IFXActor *> indicators;
 };

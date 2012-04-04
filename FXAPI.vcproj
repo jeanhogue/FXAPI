@@ -236,6 +236,14 @@
 					Name="Automatic Trading"
 					>
 					<File
+						RelativePath=".\PercentLots.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PercentLots.h"
+						>
+					</File>
+					<File
 						RelativePath=".\TradingBot.cpp"
 						>
 					</File>

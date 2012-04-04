@@ -8,7 +8,6 @@ class MovingAverage : public IFXIndicator
 {
 public:
     MovingAverage(int _period);
-    virtual ~MovingAverage() {}
 
 protected:
     int period;
