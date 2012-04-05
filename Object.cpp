@@ -40,12 +40,30 @@ void OrderBar::Render(int latestBarIndex, int numBarsToDraw, double minValue, do
 {
     color.SetOGLColor();
     
-    float x1 = 1 - (latestBarIndex - timeIndex) / (float)numBarsToDraw;
-    float x2 = 1 - (latestBarIndex - timeIndex - 1) / (float)numBarsToDraw;
+    float x1  = 1 - (latestBarIndex - timeIndex) / (float)numBarsToDraw;
+    float x2  = 1 - (latestBarIndex - closeTimeIndex) / (float)numBarsToDraw;
     float y1 = (price      - minValue) / (maxValue - minValue);
     float y2 = (takeProfit - minValue) / (maxValue - minValue);
     float y3 = (stopLoss   - minValue) / (maxValue - minValue);
 
-    DrawArrow(x1, y1, x2, y2, PixelsToWorldX(10), PixelsToWorldY(10));
-    DrawLine(x1, y1, x2, y3);
+    DrawArrow(x1, y1, x1, y2, PixelsToWorldX(10), PixelsToWorldY(10));
+    DrawLine(x1, y1, x1, y3);
+
+    glColor4f(color.r, color.g, color.b, 0.2f);
+    
+    // if was profitable
+    if ((takeProfit > price && closePrice > price) || (takeProfit < price && closePrice < price))
+    {
+        DrawTriangle(x1, y1, x1, y2, x2, y2);
+    }
+    else
+    {
+        DrawTriangle(x1, y1, x1, y3, x2, y3);
+    }
+}
+
+void OrderBar::OrderClosed(int timeIndex, double price)
+{
+    closeTimeIndex = timeIndex;
+    closePrice = price;
 }

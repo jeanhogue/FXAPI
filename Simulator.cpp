@@ -25,7 +25,7 @@ void Simulator::Run()
     }
     while (!reader->EndOfData());
 
-    capitalManager->CloseAllOrders(currentSample);
+    capitalManager->CloseAllOrders(currentSample, currentIndex);
     capitalManager->PrintReport();
 
     currentOrder = capitalManager->GetNumOrders() - 1;

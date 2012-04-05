@@ -43,9 +43,14 @@ public:
 
     virtual void Render(int latestBarIndex, int numBarsToDraw, double minValue, double maxValue);
 
+    void OrderClosed(int timeIndex, double price);
+
 private:
     double takeProfit;
     double stopLoss;
+
+    int closeTimeIndex;
+    double closePrice;
 };
 
 #endif

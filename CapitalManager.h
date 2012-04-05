@@ -22,7 +22,7 @@ public:
     int GetNumNegativeOrders();
     int GetNumOrders();
     
-    void CloseAllOrders(double sample);
+    void CloseAllOrders(double sample, int timeIndex);
     Order *GetOrder(int index) { return orders[index]; }
 
     void OnNewBar(double sample, int timeIndex);

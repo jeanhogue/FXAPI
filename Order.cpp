@@ -13,10 +13,11 @@ void Order::SetOrderBar(OrderBar *_bar)
     bar = _bar; 
 }
 
-void Order::CloseOrder(double sample)
+void Order::CloseOrder(int timeIndex, double sample)
 {
     closePrice = sample;
     active = false; 
+    bar->OrderClosed(timeIndex, sample);
 }
 
 
@@ -25,28 +26,22 @@ BuyOrder::BuyOrder(int timeIndex, double volume, double price, double takeProfit
 {
 }
 
-void BuyOrder::OnNewBar(double sample)
+void BuyOrder::OnNewBar(int timeIndex, double sample)
 {
     // check if we reached take profit or stop loss values
     if (sample >= takeProfits || sample <= stopLoss)
-    {
-        closePrice = sample;
-        active = false;
-
-        if (closePrice > openPrice)
-            bar->SetColor(0, 255, 0);
-        else
-            bar->SetColor(255, 0, 0);
-    }
+        CloseOrder(timeIndex, sample);
 }
 
-/*
-volume 1 = 100,000$
+void BuyOrder::CloseOrder(int timeIndex, double sample)
+{
+    Order::CloseOrder(timeIndex, sample);
 
-leverage 1:100 => to buy volume 1 (1 lot), need 1000$
-
-1.2345 -> 1.2348 (3 pips) = 0.0003 * 100,000 * 1 = 30$
-*/
+    if (closePrice >= openPrice)
+        bar->SetColor(0, 255, 0);
+    else
+        bar->SetColor(255, 0, 0);
+}
 
 double BuyOrder::GetProfits()
 {
@@ -59,19 +54,21 @@ SellOrder::SellOrder(int timeIndex, double volume, double price, double takeProf
 {
 }
 
-void SellOrder::OnNewBar(double sample)
+void SellOrder::OnNewBar(int timeIndex, double sample)
 {
     // check if we reached take profit or stop loss values
     if (sample <= takeProfits || sample >= stopLoss)
-    {
-        closePrice = sample;
-        active = false;
+        CloseOrder(timeIndex, sample);
+}
 
-        if (closePrice < openPrice)
-            bar->SetColor(0, 255, 0);
-        else
-            bar->SetColor(255, 0, 0);
-    }
+void SellOrder::CloseOrder(int timeIndex, double sample)
+{
+    Order::CloseOrder(timeIndex, sample);
+
+    if (closePrice <= openPrice)
+        bar->SetColor(0, 255, 0);
+    else
+        bar->SetColor(255, 0, 0);
 }
 
 double SellOrder::GetProfits()

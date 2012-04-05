@@ -9,7 +9,8 @@ class Order
 public:
     Order(int _timeIndex, double _volume, double price, double _takeProfits, double _stopLoss);
     
-    virtual void OnNewBar(double sample) = 0;
+    virtual void OnNewBar(int timeIndex, double sample) = 0;
+    virtual void CloseOrder(int timeIndex, double sample);
 
     virtual double GetProfits() = 0;
     bool IsGain() { return GetProfits() > 0; }
@@ -18,7 +19,6 @@ public:
 
     int GetTimeIndex() { return timeIndex; }
     bool IsActive() { return active; }
-    void CloseOrder(double sample);
 
 protected:
     int timeIndex;
@@ -45,7 +45,9 @@ class BuyOrder : public Order
 public:
     BuyOrder(int timeIndex, double volume, double price, double takeProfits, double stopLoss);
 
-    virtual void OnNewBar(double sample);
+    virtual void OnNewBar(int timeIndex, double sample);
+    virtual void CloseOrder(int timeIndex, double sample);
+
     virtual double GetProfits();
 };
 
@@ -55,7 +57,9 @@ class SellOrder : public Order
 public:
     SellOrder(int timeIndex, double volume, double price, double takeProfits, double stopLoss);
 
-    virtual void OnNewBar(double sample);
+    virtual void OnNewBar(int timeIndex, double sample);
+    virtual void CloseOrder(int timeIndex, double sample);
+    
     virtual double GetProfits();
 };
 

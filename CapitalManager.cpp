@@ -67,13 +67,13 @@ int CapitalManager::GetNumOrders()
     return (int)orders.size();
 }
 
-void CapitalManager::CloseAllOrders(double sample)
+void CapitalManager::CloseAllOrders(double sample, int timeIndex)
 {
     for (size_t i = 0; i < orders.size(); ++ i)
     {
         if (orders[i]->IsActive())
         {
-            orders[i]->CloseOrder(sample);
+            orders[i]->CloseOrder(timeIndex, sample);
             currentBalance += orders[i]->GetProfits();
         }
     }
@@ -85,7 +85,7 @@ void CapitalManager::OnNewBar(double sample, int timeIndex)
     {
         if (orders[i]->IsActive())
         {
-            orders[i]->OnNewBar(sample);
+            orders[i]->OnNewBar(timeIndex, sample);
 
             if (!orders[i]->IsActive())
             {
